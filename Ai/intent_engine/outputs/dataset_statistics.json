@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-07-25T03:26:30.443665+00:00",
-  "total_raw": 4474,
-  "total_clean": 3620,
-  "duplicates_removed": 854,
-  "total_train": 2546,
-  "total_val": 537,
-  "total_test": 537,
+  "generated_at": "2026-08-11T09:12:33.925266+00:00",
+  "total_raw": 10655,
+  "total_clean": 8864,
+  "duplicates_removed": 1791,
+  "total_train": 6216,
+  "total_val": 1324,
+  "total_test": 1324,
   "num_intents": 14,
   "intent_labels": [
     "crop",
@@ -25,16 +25,16 @@
   ],
   "per_intent": {
     "crop": {
-      "total": 99,
-      "train": 71,
-      "val": 14,
-      "test": 14
+      "total": 1912,
+      "train": 1340,
+      "val": 286,
+      "test": 286
     },
     "disease": {
-      "total": 100,
-      "train": 70,
-      "val": 15,
-      "test": 15
+      "total": 1391,
+      "train": 975,
+      "val": 208,
+      "test": 208
     },
     "pest": {
       "total": 197,
@@ -49,16 +49,16 @@
       "test": 88
     },
     "market": {
-      "total": 625,
-      "train": 439,
-      "val": 93,
-      "test": 93
+      "total": 834,
+      "train": 584,
+      "val": 125,
+      "test": 125
     },
     "government": {
-      "total": 99,
-      "train": 71,
-      "val": 14,
-      "test": 14
+      "total": 1262,
+      "train": 884,
+      "val": 189,
+      "test": 189
     },
     "soil": {
       "total": 472,
@@ -91,10 +91,10 @@
       "test": 15
     },
     "general": {
-      "total": 100,
-      "train": 70,
-      "val": 15,
-      "test": 15
+      "total": 868,
+      "train": 608,
+      "val": 130,
+      "test": 130
     },
     "greeting": {
       "total": 687,
@@ -109,12 +109,7 @@
       "test": 15
     }
   },
-  "failed_files": [
-    "datasets\\crop\\crop.json: Expecting ',' delimiter: line 101 column 3 (char 7591)",
-    "datasets\\disease\\disease.json: Expecting ',' delimiter: line 102 column 3 (char 8095)",
-    "datasets\\general\\general.json: Expecting ',' delimiter: line 102 column 3 (char 6870)",
-    "datasets\\government\\government.json: Expecting ',' delimiter: line 101 column 3 (char 8123)"
-  ],
+  "failed_files": [],
   "split_ratios": {
     "train": 0.7,
     "val": 0.15,

@@ -97,8 +97,7 @@
   {"text": "मेरे खेत में पिछले साल सौंफ था, अब क्या बोऊं?", "intent": "crop"},
   {"text": "मेरे खेत में पिछले साल मेथी था, अब क्या बोऊं?", "intent": "crop"},
   {"text": "कपास की बुवाई का सही समय और तरीका बताओ", "intent": "crop"},
-  {"text": "which crop is best for crop rotation after wheat?", "intent": "crop"}
-  {"text":"crop","intent":"crop"},
+  {"text": "which crop is best for crop rotation after wheat?", "intent": "crop"},{"text":"crop","intent":"crop"},
   {"text":"crops","intent":"crop"},
   {"text":"fasal","intent":"crop"},
   {"text":"kheti","intent":"crop"},
@@ -196,8 +195,7 @@
   {"text":"म्हाने खेती रो सुझाव दो","intent":"crop"},
   {"text":"फसल चुनने में मदद करो","intent":"crop"},
   {"text":"help me choose crop","intent":"crop"},
-  {"text":"suggest suitable crop","intent":"crop"}
-  {"text":"म्हारे खेत खातर कांई फसल ठीक रहसी","intent":"crop"},
+  {"text":"suggest suitable crop","intent":"crop"},{"text":"म्हारे खेत खातर कांई फसल ठीक रहसी","intent":"crop"},
   {"text":"म्हाने फसल सुझाव दो","intent":"crop"},
   {"text":"म्हारा खेत में कांई बोवूं","intent":"crop"},
   {"text":"म्हारा खेत सूको है कांई बोवां","intent":"crop"},
@@ -279,8 +277,7 @@
   {"text":"local crop","intent":"crop"},
   {"text":"seasonal crop","intent":"crop"},
   {"text":"traditional crop","intent":"crop"},
-  {"text":"modern farming crop","intent":"crop"}
-   {"text":"crop","intent":"crop"},
+  {"text":"modern farming crop","intent":"crop"},{"text":"crop","intent":"crop"},
   {"text":"crops","intent":"crop"},
   {"text":"cropping","intent":"crop"},
   {"text":"agriculture","intent":"crop"},
@@ -377,8 +374,7 @@
   {"text":"soybean","intent":"crop"},
   {"text":"सोयाबीन","intent":"crop"},
   {"text":"arhar","intent":"crop"},
-  {"text":"अरहर","intent":"crop"}
-  {"text":"masoor","intent":"crop"},
+  {"text":"अरहर","intent":"crop"},{"text":"masoor","intent":"crop"},
   {"text":"मसूर","intent":"crop"},
   {"text":"lentil","intent":"crop"},
   {"text":"alsi","intent":"crop"},
@@ -481,8 +477,7 @@
   {"text":"खरीफ","intent":"crop"},
   {"text":"kharif","intent":"crop"},
   {"text":"zaid","intent":"crop"},
-  {"text":"जायद","intent":"crop"}
-  {"text":"agronomy","intent":"crop"},
+  {"text":"जायद","intent":"crop"},{"text":"agronomy","intent":"crop"},
   {"text":"agronomist","intent":"crop"},
   {"text":"farmer","intent":"crop"},
   {"text":"kisan","intent":"crop"},
@@ -583,8 +578,7 @@
   {"text":"farmlandindia","intent":"crop"},
   {"text":"rajasthancrop","intent":"crop"},
   {"text":"rajasthankheti","intent":"crop"},
-  {"text":"rajasthanfasal","intent":"crop"}
-   {"text":"agricultureindia","intent":"crop"},
+  {"text":"rajasthanfasal","intent":"crop"},{"text":"agricultureindia","intent":"crop"},
   {"text":"rajasthanagriculture","intent":"crop"},
   {"text":"khetbari","intent":"crop"},
   {"text":"खेतबाड़ी","intent":"crop"},
@@ -682,8 +676,7 @@
   {"text":"tambaku","intent":"crop"},
   {"text":"henna","intent":"crop"},
   {"text":"मेहंदी","intent":"crop"},
-  {"text":"mehndi","intent":"crop"}
-  {"text":"blacksoil","intent":"crop"},
+  {"text":"mehndi","intent":"crop"},{"text":"blacksoil","intent":"crop"},
 {"text":"redsoil","intent":"crop"},
 {"text":"sandysoil","intent":"crop"},
 {"text":"loamysoil","intent":"crop"},
@@ -781,8 +774,7 @@
 {"text":"fruiting","intent":"crop"},
 {"text":"ripening","intent":"crop"},
 {"text":"harvest","intent":"crop"},
-{"text":"postharvest","intent":"crop"}
-{"text":"raj3077","intent":"crop"},
+{"text":"postharvest","intent":"crop"},{"text":"raj3077","intent":"crop"},
 {"text":"raj3765","intent":"crop"},
 {"text":"raj1482","intent":"crop"},
 {"text":"hd2967","intent":"crop"},
@@ -880,8 +872,7 @@
 {"text":"अदरक","intent":"crop"},
 {"text":"garammasala","intent":"crop"},
 {"text":"spicefarming","intent":"crop"},
-{"text":"seedspice","intent":"crop"}
-{"text":"rajasthan","intent":"crop"},
+{"text":"seedspice","intent":"crop"},{"text":"rajasthan","intent":"crop"},
 {"text":"rajasthani","intent":"crop"},
 {"text":"jaipur","intent":"crop"},
 {"text":"jodhpur","intent":"crop"},
@@ -982,8 +973,7 @@
 {"text":"cropadvisorai","intent":"crop"},
 {"text":"agroadvice","intent":"crop"},
 {"text":"farmadvisor","intent":"crop"},
-{"text":"kisanadvisor","intent":"crop"}
-{"text":"raj4037","intent":"crop"},
+{"text":"kisanadvisor","intent":"crop"},{"text":"raj4037","intent":"crop"},
 {"text":"raj4120","intent":"crop"},
 {"text":"raj4079","intent":"crop"},
 {"text":"raj4238","intent":"crop"},
@@ -1084,8 +1074,7 @@
 {"text":"co6","intent":"crop"},
 {"text":"co7","intent":"crop"},
 {"text":"co8","intent":"crop"},
-{"text":"co9","intent":"crop"}
-{"text":"gawar","intent":"crop"},
+{"text":"co9","intent":"crop"},{"text":"gawar","intent":"crop"},
 {"text":"guwar","intent":"crop"},
 {"text":"gwar","intent":"crop"},
 {"text":"guaar","intent":"crop"},
@@ -1184,8 +1173,7 @@
 {"text":"kapas","intent":"crop"},
 {"text":"cottn","intent":"crop"},
 {"text":"coton","intent":"crop"},
-{"text":"cotoncrop","intent":"crop"}
-{"text":"बोवाई","intent":"crop"},
+{"text":"cotoncrop","intent":"crop"},{"text":"बोवाई","intent":"crop"},
 {"text":"बुवाई","intent":"crop"},
 {"text":"खेत","intent":"crop"},
 {"text":"जमीन","intent":"crop"},
@@ -1291,8 +1279,7 @@
 {"text":"smartcrop","intent":"crop"},
 {"text":"bestcrop","intent":"crop"},
 {"text":"nextcrop","intent":"crop"},
-{"text":"futurecrop","intent":"crop"}
-{"text":"agriculturefield","intent":"crop"},
+{"text":"futurecrop","intent":"crop"},{"text":"agriculturefield","intent":"crop"},
 {"text":"farmplot","intent":"crop"},
 {"text":"fieldwork","intent":"crop"},
 {"text":"fieldcrop","intent":"crop"},
@@ -1393,8 +1380,7 @@
 {"text":"cropassistant","intent":"crop"},
 {"text":"cropexpert","intent":"crop"},
 {"text":"cropknowledge","intent":"crop"},
-{"text":"cropdatabase","intent":"crop"}
-{"text":"मेरे खेत के लिए सबसे अच्छी फसल कौन सी रहेगी?","intent":"crop"},
+{"text":"cropdatabase","intent":"crop"},{"text":"मेरे खेत के लिए सबसे अच्छी फसल कौन सी रहेगी?","intent":"crop"},
 {"text":"राजस्थान में इस समय कौन सी फसल बोनी सबसे ज्यादा फायदेमंद रहेगी?","intent":"crop"},
 {"text":"कम पानी में सबसे ज्यादा मुनाफा देने वाली फसल कौन सी है?","intent":"crop"},
 {"text":"मेरे खेत में रेतीली मिट्टी है, मुझे कौन सी फसल लगानी चाहिए?","intent":"crop"},
@@ -1448,8 +1434,7 @@
 {"text":"म्हाने जैविक खेती खातर फसल सुझावो।","intent":"crop"},
 {"text":"म्हारा खेत में कम खर्च वाली फसल कांई रहसी?","intent":"crop"},
 {"text":"म्हारे खेत में बाजरो बाद कांई बोवूं?","intent":"crop"},
-{"text":"म्हाने नकदी फसल बतावो।","intent":"crop"}
-{"text":"मेरे खेत में इस बार कौन सी फसल सबसे ज्यादा लाभ दे सकती है?","intent":"crop"},
+{"text":"म्हाने नकदी फसल बतावो।","intent":"crop"},{"text":"मेरे खेत में इस बार कौन सी फसल सबसे ज्यादा लाभ दे सकती है?","intent":"crop"},
 {"text":"मेरे खेत की मिट्टी के अनुसार फसल सुझाइए।","intent":"crop"},
 {"text":"कम सिंचाई में अच्छी पैदावार देने वाली फसल कौन सी है?","intent":"crop"},
 {"text":"इस साल सबसे ज्यादा मुनाफा किस फसल में मिलेगा?","intent":"crop"},
@@ -1503,8 +1488,7 @@
 {"text":"म्हारे गांव में सब काई बोवे है?","intent":"crop"},
 {"text":"म्हाने कम खर्च री खेती करनी है।","intent":"crop"},
 {"text":"म्हारे खेत खातर सबसे बढ़िया विकल्प बतावो।","intent":"crop"},
-{"text":"म्हारी जमीन में कौनसी फसल सफल रहसी?","intent":"crop"}
-{"text":"मेरे खेत में कौन सी फसल सबसे ज्यादा मुनाफा दे सकती है?","intent":"crop"},
+{"text":"म्हारी जमीन में कौनसी फसल सफल रहसी?","intent":"crop"},{"text":"मेरे खेत में कौन सी फसल सबसे ज्यादा मुनाफा दे सकती है?","intent":"crop"},
 {"text":"राजस्थान के मौसम के अनुसार कौन सी फसल सबसे अच्छी रहेगी?","intent":"crop"},
 {"text":"कम पानी और कम खर्च में कौन सी खेती करूँ?","intent":"crop"},
 {"text":"मेरे खेत की मिट्टी के अनुसार कौन सी फसल लगाऊँ?","intent":"crop"},
@@ -1558,8 +1542,7 @@
 {"text":"म्हारे गाँव में कांई फसल सबसे बढ़िया रहसी?","intent":"crop"},
 {"text":"म्हारा खेत खातर खेती रो सही सुझाव दो।","intent":"crop"},
 {"text":"म्हाने सबसे ज्यादा मुनाफो देण वाली फसल बतावो।","intent":"crop"},
-{"text":"म्हारे खेत में इस साल कौनसी खेती करूं?","intent":"crop"}
-{"text":"राम राम सा, म्हारा खेत खातर काई फसल ठीक रहसी?","intent":"crop"},
+{"text":"म्हारे खेत में इस साल कौनसी खेती करूं?","intent":"crop"},{"text":"राम राम सा, म्हारा खेत खातर काई फसल ठीक रहसी?","intent":"crop"},
 {"text":"खम्मा घणी, म्हाने खेती रो सुझाव दो।","intent":"crop"},
 {"text":"म्हारा खेत में कम पाणी है, कांई बोवां?","intent":"crop"},
 {"text":"म्हारे खेत री माटी रे हिसाब सूं फसल बतावो।","intent":"crop"},
@@ -1623,8 +1606,7 @@
 {"text":"Suggest a crop for sandy soil.","intent":"crop"},
 {"text":"Which crop is suitable for low rainfall?","intent":"crop"},
 {"text":"Help me choose the best crop.","intent":"crop"},
-{"text":"Suggest a profitable crop for my land.","intent":"crop"}
-{"text":"मेरे खेत की मिट्टी के अनुसार कौन सी फसल सबसे अच्छी रहेगी?","intent":"crop"},
+{"text":"Suggest a profitable crop for my land.","intent":"crop"},{"text":"मेरे खेत की मिट्टी के अनुसार कौन सी फसल सबसे अच्छी रहेगी?","intent":"crop"},
 {"text":"अगर इस साल बारिश कम हो तो मुझे कौन सी फसल बोनी चाहिए?","intent":"crop"},
 {"text":"मेरे पास सिर्फ एक बोरवेल है, कौन सी फसल लगाऊँ?","intent":"crop"},
 {"text":"कम खर्च में ज्यादा मुनाफा देने वाली खेती कौन सी है?","intent":"crop"},
@@ -1684,8 +1666,7 @@
 {"text":"म्हारा खेत में इस बार कांई बोयां?","intent":"crop"},
 {"text":"म्हाने खेती री सही सलाह दो।","intent":"crop"},
 {"text":"म्हारा खेत में अच्छी पैदावार वाली फसल बतावो।","intent":"crop"},
-{"text":"म्हारे खेत में काई बोवूं जिको खर्च कम आवे?","intent":"crop"}
-{"text":"मेरे खेत में कौन सी फसल सबसे ज्यादा लाभ दे सकती है यदि पानी सीमित हो?","intent":"crop"},
+{"text":"म्हारे खेत में काई बोवूं जिको खर्च कम आवे?","intent":"crop"},{"text":"मेरे खेत में कौन सी फसल सबसे ज्यादा लाभ दे सकती है यदि पानी सीमित हो?","intent":"crop"},
 {"text":"मेरे गांव के मौसम के अनुसार कौन सी खेती सबसे अच्छी रहेगी?","intent":"crop"},
 {"text":"इस साल अच्छी कमाई के लिए कौन सी फसल बोऊँ?","intent":"crop"},
 {"text":"कम समय में तैयार होने वाली लाभदायक फसल कौन सी है?","intent":"crop"},
@@ -1743,8 +1724,7 @@
 {"text":"म्हने कम खर्च री खेती करवी है।","intent":"crop"},
 {"text":"म्हारा खेत खातर जीरो ठीक रहसी के नहीं?","intent":"crop"},
 {"text":"म्हारी जमीन में बाजरो अच्छा होसी?","intent":"crop"},
-{"text":"म्हूं काई फसल बोऊँ जिको मुनाफो घणो होय?","intent":"crop"}
-{"text":"मेरे खेत में इस बार सबसे ज्यादा कमाई किस फसल से होगी?","intent":"crop"},
+{"text":"म्हूं काई फसल बोऊँ जिको मुनाफो घणो होय?","intent":"crop"},{"text":"मेरे खेत में इस बार सबसे ज्यादा कमाई किस फसल से होगी?","intent":"crop"},
 {"text":"राजस्थान के किसान इस समय कौन सी फसल सबसे ज्यादा बो रहे हैं?","intent":"crop"},
 {"text":"मेरे खेत में पानी बहुत कम है, मुझे कौन सी खेती करनी चाहिए?","intent":"crop"},
 {"text":"मेरे खेत की मिट्टी हल्की है, कौन सी फसल सबसे अच्छी रहेगी?","intent":"crop"},
@@ -1802,8 +1782,7 @@
 {"text":"म्हने खेती रो बढ़िया उपाय बतावो।","intent":"crop"},
 {"text":"थारो खेत खातर काई खेती सही रहसी?","intent":"crop"},
 {"text":"थारी जमीन में काई फसल बढ़िया होसी?","intent":"crop"},
-{"text":"म्हारा खेत में अगली फसल काई राखूं?","intent":"crop"}
-{"text":"मेरे खेत में दो बीघा जमीन है, कौन सी फसल सबसे ज्यादा फायदा देगी?","intent":"crop"},
+{"text":"म्हारा खेत में अगली फसल काई राखूं?","intent":"crop"},{"text":"मेरे खेत में दो बीघा जमीन है, कौन सी फसल सबसे ज्यादा फायदा देगी?","intent":"crop"},
 {"text":"एक एकड़ खेत में कौन सी खेती सबसे लाभदायक रहेगी?","intent":"crop"},
 {"text":"मेरे खेत में ड्रिप सिंचाई है, कौन सी फसल लगाऊँ?","intent":"crop"},
 {"text":"मेरे खेत में बोरवेल का पानी उपलब्ध है, कौन सी फसल अच्छी रहेगी?","intent":"crop"},
@@ -1861,8 +1840,7 @@
 {"text":"म्हारी जमीन खातर काई फसल बढ़िया चालसी?","intent":"crop"},
 {"text":"थारा हिसाब सूं काई खेती करूं?","intent":"crop"},
 {"text":"थारी जमीन में काई फसल मुनाफो देवसी?","intent":"crop"},
-{"text":"म्हने खेती रो सही रास्तो बतावो।","intent":"crop"}
-{"text":"जुलाई में कौन सी फसल बोनी सबसे अच्छी रहेगी?","intent":"crop"},
+{"text":"म्हने खेती रो सही रास्तो बतावो।","intent":"crop"},{"text":"जुलाई में कौन सी फसल बोनी सबसे अच्छी रहेगी?","intent":"crop"},
 {"text":"अगस्त में कौन सी खेती करना सही रहेगा?","intent":"crop"},
 {"text":"सितंबर में कौन सी फसल बोई जाती है?","intent":"crop"},
 {"text":"अक्टूबर में कौन सी रबी फसल बोनी चाहिए?","intent":"crop"},
@@ -1929,8 +1907,7 @@
 {"text":"म्हारे सवाई माधोपुर में इस बार कांई खेती करूं?","intent":"crop"},
 {"text":"म्हारा खेत में बरसात आवे तो कांई बोवां?","intent":"crop"},
 {"text":"म्हाने सर्दी री खेती बतावो।","intent":"crop"},
-{"text":"म्हाने गर्मी री फसल बतावो।","intent":"crop"}
-{"text":"मेरे खेत में गेहूं बोना सही रहेगा या नहीं?","intent":"crop"},
+{"text":"म्हाने गर्मी री फसल बतावो।","intent":"crop"},{"text":"मेरे खेत में गेहूं बोना सही रहेगा या नहीं?","intent":"crop"},
 {"text":"इस साल गेहूं की खेती करूँ या दूसरी फसल?","intent":"crop"},
 {"text":"गेहूं के बाद कौन सी फसल बोना अच्छा रहेगा?","intent":"crop"},
 {"text":"सरसों की जगह इस बार कौन सी फसल लगाऊँ?","intent":"crop"},
@@ -1992,8 +1969,7 @@
 {"text":"म्हाने मूंग री खेती करनी है।","intent":"crop"},
 {"text":"म्हारे खेत खातर सबसे बढ़िया फसल गेहूं है के नहीं?","intent":"crop"},
 {"text":"म्हारा खेत में सरसों रो फायदा रहसी?","intent":"crop"},
-{"text":"जीरा बोवां तो मुनाफो मिलसी?","intent":"crop"}
-{"text":"मेरे खेत में कौन सी फसल लगाने से सबसे ज्यादा कमाई होगी?","intent":"crop"},
+{"text":"जीरा बोवां तो मुनाफो मिलसी?","intent":"crop"},{"text":"मेरे खेत में कौन सी फसल लगाने से सबसे ज्यादा कमाई होगी?","intent":"crop"},
 {"text":"मेरी जमीन के हिसाब से सबसे अच्छी फसल कौन सी है?","intent":"crop"},
 {"text":"क्या इस साल बाजरा बोना सही रहेगा या ग्वार?","intent":"crop"},
 {"text":"मेरे खेत में पानी बहुत कम है, मुझे कौन सी फसल लगानी चाहिए?","intent":"crop"},

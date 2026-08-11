@@ -98,8 +98,7 @@
   {"text": "म्हारी गेहूं री फसल में लूज स्मट लाग री है, के करूं?", "intent": "disease"},
   {"text": "मेरी मिर्च के फलों पर काले धब्बे आ गए हैं", "intent": "disease"},
   {"text": "rice mein false smut disease ho gayi hai", "intent": "disease"},
-  {"text": "मेरी मक्का में चारकोल रॉट रोग है, उपाय बताओ", "intent": "disease"}
-  {"text":"मेरी फसल में रोग लग गया है।","intent":"disease"},
+  {"text": "मेरी मक्का में चारकोल रॉट रोग है, उपाय बताओ", "intent": "disease"},{"text":"मेरी फसल में रोग लग गया है।","intent":"disease"},
 {"text":"मेरे खेत की फसल बीमार हो गई है।","intent":"disease"},
 {"text":"मेरी फसल में बीमारी दिखाई दे रही है।","intent":"disease"},
 {"text":"पत्तियों पर धब्बे आ गए हैं।","intent":"disease"},
@@ -166,8 +165,7 @@
 {"text":"म्हारा खेत में रोग रोकणो उपाय बतावो।","intent":"disease"},
 {"text":"म्हारी फसल खराब हो री है।","intent":"disease"},
 {"text":"म्हारे पौधा पर धब्बा पड़ गया।","intent":"disease"},
-{"text":"म्हारी खेती में बीमारी क्यों आई?","intent":"disease"}
-{"text":"मेरी फसल के पत्ते पीले पड़ रहे हैं।","intent":"disease"},
+{"text":"म्हारी खेती में बीमारी क्यों आई?","intent":"disease"},{"text":"मेरी फसल के पत्ते पीले पड़ रहे हैं।","intent":"disease"},
 {"text":"पत्तियों पर भूरे धब्बे दिखाई दे रहे हैं।","intent":"disease"},
 {"text":"पत्तियों पर काले धब्बे बन गए हैं।","intent":"disease"},
 {"text":"पत्तों पर सफेद परत जम गई है।","intent":"disease"},
@@ -234,8 +232,7 @@
 {"text":"म्हारी फसल में धब्बा पड़ गयो।","intent":"disease"},
 {"text":"म्हाने बीमारी पहचानणी है।","intent":"disease"},
 {"text":"म्हारी फसल बचावो सा।","intent":"disease"},
-{"text":"म्हारा खेत में कांई रोग लाग गयो?","intent":"disease"}
-{"text":"मेरी फसल में कौन सा रोग है?","intent":"disease"},
+{"text":"म्हारा खेत में कांई रोग लाग गयो?","intent":"disease"},{"text":"मेरी फसल में कौन सा रोग है?","intent":"disease"},
 {"text":"इस फोटो में कौन सी बीमारी है?","intent":"disease"},
 {"text":"मेरी फसल की बीमारी पहचानो।","intent":"disease"},
 {"text":"इस पौधे में कौन सा रोग लगा है?","intent":"disease"},
@@ -317,8 +314,7 @@
 {"text":"म्हारा खेत में बीमारी फैल री है।","intent":"disease"},
 {"text":"म्हाने फोटो देखीने रोग बतावो।","intent":"disease"},
 {"text":"म्हारी फसल का निदान करो।","intent":"disease"},
-{"text":"म्हारा पौधा में काई दिक्कत है?","intent":"disease"}
-{"text":"मेरी फसल का इलाज बताइए।","intent":"disease"},
+{"text":"म्हारा पौधा में काई दिक्कत है?","intent":"disease"},{"text":"मेरी फसल का इलाज बताइए।","intent":"disease"},
 {"text":"इस बीमारी की सबसे अच्छी दवा कौन सी है?","intent":"disease"},
 {"text":"रोग को खत्म करने के लिए क्या करें?","intent":"disease"},
 {"text":"फसल की बीमारी कैसे ठीक होगी?","intent":"disease"},
@@ -400,8 +396,7 @@
 {"text":"म्हाने मदद करो सा।","intent":"disease"},
 {"text":"म्हारी फसल में बीमारी घणी फैल गई।","intent":"disease"},
 {"text":"म्हारा पौधा बची जासी के?","intent":"disease"},
-{"text":"म्हाने सही दवाई सुझावो।","intent":"disease"}
-{"text":"मेरी फसल में कीड़े हैं या बीमारी है?","intent":"disease"},
+{"text":"म्हाने सही दवाई सुझावो।","intent":"disease"},{"text":"मेरी फसल में कीड़े हैं या बीमारी है?","intent":"disease"},
 {"text":"यह रोग है या कीट का हमला?","intent":"disease"},
 {"text":"पत्तियों पर छोटे-छोटे छेद हो गए हैं।","intent":"disease"},
 {"text":"पत्ते पूरी तरह खाए जा रहे हैं।","intent":"disease"},
@@ -483,8 +478,7 @@
 {"text":"म्हारी खेती रो रोग पहचानो।","intent":"disease"},
 {"text":"म्हाने सही सलाह दो।","intent":"disease"},
 {"text":"म्हारे खेत में रोग फैलतो जावै।","intent":"disease"},
-{"text":"म्हारी पूरी फसल खतरे में है।","intent":"disease"}
-{"text":"गेहूं में कौन सा रोग लगा है?","intent":"disease"},
+{"text":"म्हारी पूरी फसल खतरे में है।","intent":"disease"},{"text":"गेहूं में कौन सा रोग लगा है?","intent":"disease"},
 {"text":"गेहूं के पत्ते पीले हो रहे हैं।","intent":"disease"},
 {"text":"गेहूं की फसल सूख रही है।","intent":"disease"},
 {"text":"गेहूं में रतुआ रोग लग गया है क्या?","intent":"disease"},
@@ -565,8 +559,7 @@
 {"text":"म्हारी ग्वार में कांई रोग है?","intent":"disease"},
 {"text":"म्हारी मूंग बची जासी के?","intent":"disease"},
 {"text":"म्हारा खेत में गेहूं खराब हो रयो है।","intent":"disease"},
-{"text":"म्हाने सही दवाई बतावो सा।","intent":"disease"}
-{"text":"झुलसा रोग","intent":"disease"},
+{"text":"म्हाने सही दवाई बतावो सा।","intent":"disease"},{"text":"झुलसा रोग","intent":"disease"},
 {"text":"अगेती झुलसा","intent":"disease"},
 {"text":"पछेती झुलसा","intent":"disease"},
 {"text":"रतुआ रोग","intent":"disease"},
@@ -663,8 +656,7 @@
 {"text":"म्हारा खेत में ब्लाइट है के?","intent":"disease"},
 {"text":"म्हारी फसल में काई फफूंदी है?","intent":"disease"},
 {"text":"म्हारा पौधा में रोग पहचानो।","intent":"disease"},
-{"text":"म्हारी फसल बचावो सा।","intent":"disease"}
-{"text":"भाई मेरी फसल बचा लो।","intent":"disease"},
+{"text":"म्हारी फसल बचावो सा।","intent":"disease"},{"text":"भाई मेरी फसल बचा लो।","intent":"disease"},
 {"text":"मेरी पूरी फसल खराब हो रही है।","intent":"disease"},
 {"text":"जल्दी बताओ क्या करूँ।","intent":"disease"},
 {"text":"रोग बहुत तेजी से फैल रहा है।","intent":"disease"},
@@ -746,8 +738,7 @@
 {"text":"म्हारी फसल ने बचावो सा।","intent":"disease"},
 {"text":"म्हारे खेत में सब खराब हो रयो है।","intent":"disease"},
 {"text":"म्हारा पौधा एक-एक करके मर रयो है।","intent":"disease"},
-{"text":"म्हाने अभी समाधान दो।","intent":"disease"}
-{"text":"इस रोग के लिए कौन सी दवा सबसे अच्छी है?","intent":"disease"},
+{"text":"म्हाने अभी समाधान दो।","intent":"disease"},{"text":"इस रोग के लिए कौन सी दवा सबसे अच्छी है?","intent":"disease"},
 {"text":"मेरी फसल पर कौन सा स्प्रे करना चाहिए?","intent":"disease"},
 {"text":"इस बीमारी का इलाज क्या है?","intent":"disease"},
 {"text":"रोग खत्म करने के लिए क्या करें?","intent":"disease"},
@@ -829,8 +820,7 @@
 {"text":"म्हारा पौधा ठीक हो जासी के?","intent":"disease"},
 {"text":"म्हारी फसल रो उपचार जल्दी बतावो।","intent":"disease"},
 {"text":"म्हाने रोग रोकणो सही तरीका बतावो।","intent":"disease"},
-{"text":"म्हारा खेत बचावो सा।","intent":"disease"}
-{"text":"मेरी फसल में अल्टरनेरिया ब्लाइट लग गई है।","intent":"disease"},
+{"text":"म्हारा खेत बचावो सा।","intent":"disease"},{"text":"मेरी फसल में अल्टरनेरिया ब्लाइट लग गई है।","intent":"disease"},
 {"text":"क्या यह अल्टरनेरिया ब्लाइट है?","intent":"disease"},
 {"text":"अल्टरनेरिया रोग का इलाज बताइए।","intent":"disease"},
 {"text":"मेरी फसल में पाउडरी मिल्ड्यू दिखाई दे रही है।","intent":"disease"},
@@ -917,8 +907,7 @@
 {"text":"म्हारी फसल में वायरस आ गयो।","intent":"disease"},
 {"text":"म्हारा खेत में जीवाणु रोग है।","intent":"disease"},
 {"text":"म्हाने सही फफूंदनाशक बतावो।","intent":"disease"},
-{"text":"म्हारी खेती ने बचावो सा।","intent":"disease"}
-{"text":"इस फोटो में कौन सा रोग दिखाई दे रहा है?","intent":"disease"},
+{"text":"म्हारी खेती ने बचावो सा।","intent":"disease"},{"text":"इस फोटो में कौन सा रोग दिखाई दे रहा है?","intent":"disease"},
 {"text":"मेरी फसल की तस्वीर देखकर बीमारी पहचानो।","intent":"disease"},
 {"text":"AI से मेरी फसल की जांच करो।","intent":"disease"},
 {"text":"इस पत्ते की फोटो देखकर रोग बताओ।","intent":"disease"},
@@ -995,8 +984,7 @@
 {"text":"म्हारा रिजल्ट गलत लाग रयो है।","intent":"disease"},
 {"text":"म्हाने फेर सूं स्कैन कर दो।","intent":"disease"},
 {"text":"म्हारी फसल री पहचान सही करो।","intent":"disease"},
-{"text":"म्हारा खेत रो रोग जांचो सा।","intent":"disease"}
-{"text":"मेरे गेहूं के पत्ते पीले पड़ रहे हैं, क्या रोग है?","intent":"disease"},
+{"text":"म्हारा खेत रो रोग जांचो सा।","intent":"disease"},{"text":"मेरे गेहूं के पत्ते पीले पड़ रहे हैं, क्या रोग है?","intent":"disease"},
 {"text":"गेहूं की पत्तियों पर भूरे धब्बे बन रहे हैं।","intent":"disease"},
 {"text":"गेहूं में सफेद चूर्ण जैसा दिखाई दे रहा है।","intent":"disease"},
 {"text":"गेहूं की बालियां सूख रही हैं।","intent":"disease"},
@@ -1078,8 +1066,7 @@
 {"text":"म्हारी खेती में वायरस आ गयो।","intent":"disease"},
 {"text":"म्हारा खेत में फफूंदी घणी फैल गई।","intent":"disease"},
 {"text":"म्हाने सही रोग बतावो।","intent":"disease"},
-{"text":"म्हारी फसल रो उपचार करावो।","intent":"disease"}
-{"text":"रोग","intent":"disease"},
+{"text":"म्हारी फसल रो उपचार करावो।","intent":"disease"},{"text":"रोग","intent":"disease"},
 {"text":"बीमारी","intent":"disease"},
 {"text":"संक्रमण","intent":"disease"},
 {"text":"फफूंदी","intent":"disease"},
@@ -1180,8 +1167,7 @@
 {"text":"analysis","intent":"disease"},
 {"text":"solution","intent":"disease"},
 {"text":"recover","intent":"disease"},
-{"text":"emergency","intent":"disease"}
-{"text":"रोग","intent":"disease"},
+{"text":"emergency","intent":"disease"},{"text":"रोग","intent":"disease"},
 {"text":"बीमारी","intent":"disease"},
 {"text":"फंगस","intent":"disease"},
 {"text":"फफूंदी","intent":"disease"},
@@ -1297,8 +1283,7 @@
 {"text":"plant disease check","intent":"disease"},
 {"text":"fungus ka ilaj","intent":"disease"},
 {"text":"virus disease treatment","intent":"disease"},
-{"text":"crop disease report","intent":"disease"}
-{"text":"सूखना","intent":"disease"},
+{"text":"crop disease report","intent":"disease"},{"text":"सूखना","intent":"disease"},
 {"text":"मुरझाना","intent":"disease"},
 {"text":"गलन","intent":"disease"},
 {"text":"सड़न","intent":"disease"},
@@ -1380,8 +1365,7 @@
 {"text":"photo check","intent":"disease"},
 {"text":"image detect","intent":"disease"},
 {"text":"leaf check","intent":"disease"},
-{"text":"crop inspect","intent":"disease"}
-{"text":"रोग","intent":"disease"},
+{"text":"crop inspect","intent":"disease"},{"text":"रोग","intent":"disease"},
 {"text":"बीमारी","intent":"disease"},
 {"text":"समस्या","intent":"disease"},
 {"text":"दिक्कत","intent":"disease"},
@@ -1491,8 +1475,7 @@
 {"text":"control","intent":"disease"},
 {"text":"prevention","intent":"disease"},
 {"text":"recovery","intent":"disease"},
-{"text":"emergency","intent":"disease"}
-{"text":"खराब","intent":"disease"},
+{"text":"emergency","intent":"disease"},{"text":"खराब","intent":"disease"},
 {"text":"बर्बाद","intent":"disease"},
 {"text":"सूखा","intent":"disease"},
 {"text":"कमजोर","intent":"disease"},

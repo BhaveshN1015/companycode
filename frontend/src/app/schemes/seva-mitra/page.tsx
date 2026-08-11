@@ -451,7 +451,8 @@ export default function SevaMitraPage() {
         const startMsg = profile.language === 'marwari'
             ? `राम राम सा! '${scheme.title}' सारू आवेदन शुरू हो ग्यो है सा। मेहरबानी करके आपनो बैंक खातो नम्बर बताओ सा?`
             : `आवेदन प्रक्रिया शुरू! '${scheme.title}' के लिए आवेदन पत्र भरने में मैं आपकी सहायता करूँगी। कृपया अपना बैंक खाता संख्या (Bank Account Number) दर्ज करें या बोलकर बताएं:`;
-        
+
+        lastSpokenIndexRef.current = -1;
         setChatHistory([
             { sender: 'ai', text: startMsg }
         ]);

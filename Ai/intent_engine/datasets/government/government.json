@@ -97,8 +97,7 @@
   {"text": "फसल बीमा का प्रीमियम कितना है गेहूं के लिए", "intent": "government"},
   {"text": "wheat crop insurance premium kitna hoga", "intent": "government"},
   {"text": "सरकारी सब्सिडी पर स्प्रिंकलर सेट कैसे मिलेगा", "intent": "government"},
-  {"text": "sprinkler set subsidy rajasthan apply kaise karein", "intent": "government"}
-  {"text":"सरकार","intent":"government"},
+  {"text": "sprinkler set subsidy rajasthan apply kaise karein", "intent": "government"},{"text":"सरकार","intent":"government"},
 {"text":"सरकारी","intent":"government"},
 {"text":"योजना","intent":"government"},
 {"text":"स्कीम","intent":"government"},
@@ -201,8 +200,7 @@
 {"text":"म्हाने आवेदन करनो है","intent":"government"},
 {"text":"म्हाने योजना रो लाभ चाहिए","intent":"government"},
 {"text":"म्हाने योजना रो स्टेटस देखणो है","intent":"government"},
-{"text":"म्हाने ईकेवाईसी करवाणी है","intent":"government"}
-{"text":"पीएम किसान सम्मान निधि योजना की पूरी जानकारी दीजिए।","intent":"government"},
+{"text":"म्हाने ईकेवाईसी करवाणी है","intent":"government"},{"text":"पीएम किसान सम्मान निधि योजना की पूरी जानकारी दीजिए।","intent":"government"},
 {"text":"मुझे पीएम किसान योजना के लिए आवेदन करना है, पूरी प्रक्रिया बताइए।","intent":"government"},
 {"text":"पीएम किसान योजना में मेरा नाम कैसे जोड़ सकता हूँ?","intent":"government"},
 {"text":"पीएम किसान की अगली किस्त कब आएगी?","intent":"government"},
@@ -244,8 +242,7 @@
 {"text":"म्हाने पीएम किसान रो लाभ कद मिलसी?","intent":"government"},
 {"text":"म्हाने पीएम किसान आवेदन करनो है।","intent":"government"},
 {"text":"म्हूं पीएम किसान खातर योग्य हूँ के?","intent":"government"},
-{"text":"म्हाने पीएम किसान री अगली किस्त री जानकारी देवो।","intent":"government"}
-{"text":"प्रधानमंत्री फसल बीमा योजना","intent":"government"},
+{"text":"म्हाने पीएम किसान री अगली किस्त री जानकारी देवो।","intent":"government"},{"text":"प्रधानमंत्री फसल बीमा योजना","intent":"government"},
 {"text":"पीएम फसल बीमा","intent":"government"},
 {"text":"फसल बीमा","intent":"government"},
 {"text":"बीमा योजना","intent":"government"},
@@ -308,8 +305,7 @@
 {"text":"म्हारी फसल ओलावृष्टि सूं खराब हो गई।","intent":"government"},
 {"text":"म्हारी फसल बरसात सूं खराब हो गई।","intent":"government"},
 {"text":"म्हाने बीमा आवेदन भरनो है।","intent":"government"},
-{"text":"म्हाने फसल नुकसान री रिपोर्ट करणी है।","intent":"government"}
-{"text":"सरकारी योजना बताइए","intent":"government"},
+{"text":"म्हाने फसल नुकसान री रिपोर्ट करणी है।","intent":"government"},{"text":"सरकारी योजना बताइए","intent":"government"},
 {"text":"किसान के लिए सरकारी योजना","intent":"government"},
 {"text":"प्रधानमंत्री किसान सम्मान निधि योजना","intent":"government"},
 {"text":"राजस्थान सरकार की किसान योजना","intent":"government"},
@@ -343,8 +339,7 @@
 
 {"text":"राम राम, म्हारे वास्ते सरकार री काई मदद है?","intent":"government"},
 {"text":"म्हारे नाम सूँ योजना चाले है के?","intent":"government"},
-{"text":"म्हाने किसान योजना री पूरी जानकारी देवो।","intent":"government"}
-{"text":"सरकार की नई किसान योजना कौन सी है?","intent":"government"},
+{"text":"म्हाने किसान योजना री पूरी जानकारी देवो।","intent":"government"},{"text":"सरकार की नई किसान योजना कौन सी है?","intent":"government"},
 {"text":"मेरे लिए कौन सी सरकारी योजना सबसे अच्छी रहेगी?","intent":"government"},
 {"text":"राजस्थान के किसानों के लिए कौन-कौन सी सरकारी योजनाएँ उपलब्ध हैं?","intent":"government"},
 {"text":"केंद्र सरकार किसानों के लिए कौन सी सहायता देती है?","intent":"government"},
@@ -403,8 +398,7 @@
 {"text":"म्हारे खेत खातर सरकारी लाभ बताओ।","intent":"government"},
 {"text":"म्हाने नई कृषि योजना समझावो।","intent":"government"},
 {"text":"म्है ऑनलाइन आवेदन कर सकूँ के?","intent":"government"},
-{"text":"म्हाने पूरी सरकारी जानकारी आसान भाषा में देवो।","intent":"government"}
-{"text":"सरकार","intent":"government"},
+{"text":"म्हाने पूरी सरकारी जानकारी आसान भाषा में देवो।","intent":"government"},{"text":"सरकार","intent":"government"},
 {"text":"सरकारी","intent":"government"},
 {"text":"योजना","intent":"government"},
 {"text":"स्कीम","intent":"government"},
@@ -509,8 +503,7 @@
 {"text":"Mhane kheti khatar government ri puri madad joiye.","intent":"government"},
 {"text":"Mharo naam kai government scheme me aave hai ke?","intent":"government"},
 {"text":"Mhane subsidy leni hai, kai karu?","intent":"government"},
-{"text":"Thare hisab su mhare vaste kai sarkari yojana suthiya rahegi?","intent":"government"}
-{"text":"पीएम किसान","intent":"government"},
+{"text":"Thare hisab su mhare vaste kai sarkari yojana suthiya rahegi?","intent":"government"},{"text":"पीएम किसान","intent":"government"},
 {"text":"प्रधानमंत्री किसान सम्मान निधि","intent":"government"},
 {"text":"PM Kisan","intent":"government"},
 {"text":"PM Kisan Samman Nidhi","intent":"government"},
@@ -601,8 +594,7 @@
 {"text":"मुझे किसान क्रेडिट कार्ड बनवाना है, पूरी जानकारी दीजिए।","intent":"government"},
 {"text":"प्रधानमंत्री कुसुम योजना के अंतर्गत सोलर पंप की सब्सिडी कैसे मिलेगी?","intent":"government"},
 {"text":"राज किसान पोर्टल पर कौन-कौन सी योजनाओं का लाभ मिलता है?","intent":"government"},
-{"text":"प्रधानमंत्री फसल बीमा योजना में क्लेम करने की पूरी प्रक्रिया समझाइए।","intent":"government"}
-{"text":"प्रधानमंत्री किसान मानधन योजना","intent":"government"},
+{"text":"प्रधानमंत्री फसल बीमा योजना में क्लेम करने की पूरी प्रक्रिया समझाइए।","intent":"government"},{"text":"प्रधानमंत्री किसान मानधन योजना","intent":"government"},
 {"text":"PM Kisan Maandhan","intent":"government"},
 {"text":"किसान मानधन","intent":"government"},
 {"text":"farmer pension scheme","intent":"government"},
@@ -683,8 +675,7 @@
 {"text":"म्हाने बागवानी योजना री जानकारी देवो।","intent":"government"},
 {"text":"म्हारे खातर सिंचाई योजना काई है?","intent":"government"},
 {"text":"म्हाने खेती खातर सरकारी पेंशन योजना बतावो।","intent":"government"},
-{"text":"म्हाने सरकार सूं कृषि यंत्र खरीदण खातर सहायता चाहिए।","intent":"government"}
-{"text":"राज किसान पोर्टल","intent":"government"},
+{"text":"म्हाने सरकार सूं कृषि यंत्र खरीदण खातर सहायता चाहिए।","intent":"government"},{"text":"राज किसान पोर्टल","intent":"government"},
 {"text":"Raj Kisan Portal","intent":"government"},
 {"text":"राज किसान","intent":"government"},
 {"text":"rajkisan","intent":"government"},
@@ -757,8 +748,7 @@
 {"text":"म्हैं राज किसान मं नाम जोड़ावणो है।","intent":"government"},
 {"text":"राज किसान पोर्टल मं आवेदन कइसे करूं?","intent":"government"},
 {"text":"म्हारे वास्ते राज किसान री सब्सिडी बतावो।","intent":"government"},
-{"text":"थारो राज किसान पोर्टल मं मदद करजो।","intent":"government"}
-{"text":"Farmer Registry","intent":"government"},
+{"text":"थारो राज किसान पोर्टल मं मदद करजो।","intent":"government"},{"text":"Farmer Registry","intent":"government"},
 {"text":"Farmer ID","intent":"government"},
 {"text":"Farmer Registry ID","intent":"government"},
 {"text":"Digital Farmer ID","intent":"government"},
@@ -837,8 +827,7 @@
 {"text":"म्हाने डिजिटल किसान आईडी बनवाणी है, थूं पूरा तरीका बतावो।","intent":"government"},
 {"text":"म्हाने एग्रीस्टैक सूं काई-काई फायदा मिलसी, विस्तार सूं समझावो।","intent":"government"},
 {"text":"म्हारी जमीन, आधार अर किसान आईडी ने एक साथ जोड़ण री पूरी प्रक्रिया बतावो।","intent":"government"},
-{"text":"म्हूं सरकार री सारी योजनां रो लाभ लेणो चाहूं, किसान रजिस्ट्री किण रीती काम आवसी?","intent":"government"}
-{"text":"Jamabandi","intent":"government"},
+{"text":"म्हूं सरकार री सारी योजनां रो लाभ लेणो चाहूं, किसान रजिस्ट्री किण रीती काम आवसी?","intent":"government"},{"text":"Jamabandi","intent":"government"},
 {"text":"जमाबंदी","intent":"government"},
 {"text":"Jamabandi Nakal","intent":"government"},
 {"text":"जमाबंदी नकल","intent":"government"},
@@ -925,8 +914,7 @@
 {"text":"म्हारी जमीन रो सरकारी रिकॉर्ड किण रीती देखूं, पूरा बतावो।","intent":"government"},
 {"text":"म्हाने अपना खाता पोर्टल चलावणो सिखावो।","intent":"government"},
 {"text":"म्हारे खेत रो रिकॉर्ड ऑनलाइन किण रीती मिलसी?","intent":"government"},
-{"text":"म्हाने जमीन री पूरी सरकारी जानकारी देवो सा।","intent":"government"}
-{"text":"महिला किसान योजना","intent":"government"},
+{"text":"म्हाने जमीन री पूरी सरकारी जानकारी देवो सा।","intent":"government"},{"text":"महिला किसान योजना","intent":"government"},
 {"text":"Women Farmer Scheme","intent":"government"},
 {"text":"महिला कृषि योजना","intent":"government"},
 {"text":"Mahila Kisan","intent":"government"},
@@ -1019,8 +1007,7 @@
 {"text":"म्हाने खेती के साथ पशुपालन भी शुरू करनो है, सरकार किण-किण मदद करसी?","intent":"government"},
 {"text":"म्हूं युवा किसान हूँ, मारा वास्ते सारी सरकारी योजनां विस्तार सूं बतावो।","intent":"government"},
 {"text":"म्हाने डेयरी, बकरी पालन, मुर्गी पालन अर मधुमक्खी पालन खातर सरकारी सहायता री पूरी जानकारी देवो।","intent":"government"},
-{"text":"म्हाने सरकार री हर वो योजना बतावो जिण सूं मारी खेती अर आमदनी दोनों बढ़ सकै।","intent":"government"}
-{"text":"पशुपालन","intent":"government"},
+{"text":"म्हाने सरकार री हर वो योजना बतावो जिण सूं मारी खेती अर आमदनी दोनों बढ़ सकै।","intent":"government"},{"text":"पशुपालन","intent":"government"},
 {"text":"Animal Husbandry","intent":"government"},
 {"text":"animal husbandry","intent":"government"},
 {"text":"pashupalan","intent":"government"},
@@ -1107,8 +1094,7 @@
 {"text":"Farmer Producer Organization","intent":"government"},
 {"text":"कृषि स्टार्टअप","intent":"government"},
 {"text":"Agri Startup","intent":"government"},
-{"text":"startup subsidy","intent":"government"}
-{"text":"राम राम भाई","intent":"government"},
+{"text":"startup subsidy","intent":"government"},{"text":"राम राम भाई","intent":"government"},
 {"text":"राम राम सा सरकार री योजना बतावो","intent":"government"},
 {"text":"नमस्ते जी किसान योजना बताइए","intent":"government"},
 {"text":"खम्मा घणी सा सब्सिडी चाहिए","intent":"government"},
@@ -1162,8 +1148,7 @@
 {"text":"Mhane kheti khatar kai kai subsidy mil sake?","intent":"government"},
 {"text":"Mhane badha government benefit samjhavjo.","intent":"government"},
 {"text":"Mharo naam kai scheme me aave hai ke?","intent":"government"},
-{"text":"Mhane badhi kisan yojana ri jankari ek sath devo.","intent":"government"}
-{"text":"DBT","intent":"government"},
+{"text":"Mhane badhi kisan yojana ri jankari ek sath devo.","intent":"government"},{"text":"DBT","intent":"government"},
 {"text":"Direct Benefit Transfer","intent":"government"},
 {"text":"डीबीटी","intent":"government"},
 {"text":"CSC","intent":"government"},
@@ -1243,8 +1228,7 @@
 {"text":"म्हाने पटवारी सूं जमाबंदी निकलवाणी है।","intent":"government"},
 {"text":"म्हाने कृषि विभाग में सब्सिडी खातर जावणो है।","intent":"government"},
 {"text":"म्हाने केवीके री ट्रेनिंग लेणी है।","intent":"government"},
-{"text":"म्हाने नाबार्ड सूं लोन मिल सकै के?","intent":"government"}
-{"text":"PM Garib Kalyan Yojana","intent":"government"},
+{"text":"म्हाने नाबार्ड सूं लोन मिल सकै के?","intent":"government"},{"text":"PM Garib Kalyan Yojana","intent":"government"},
 {"text":"प्रधानमंत्री गरीब कल्याण योजना","intent":"government"},
 {"text":"Garib Kalyan Yojana","intent":"government"},
 {"text":"PM Vishwakarma","intent":"government"},
@@ -1313,8 +1297,7 @@
 {"text":"Mhane Ujjwala Yojana ro labh joie.","intent":"government"},
 {"text":"Mhane Atal Pension Yojana samjhavjo.","intent":"government"},
 {"text":"Mhane PMEGP ri puri jankari devo.","intent":"government"},
-{"text":"Mhane government ri rojgar yojana batavo.","intent":"government"}
-{"text":"National Livestock Mission","intent":"government"},
+{"text":"Mhane government ri rojgar yojana batavo.","intent":"government"},{"text":"National Livestock Mission","intent":"government"},
 {"text":"राष्ट्रीय पशुधन मिशन","intent":"government"},
 {"text":"NLM","intent":"government"},
 {"text":"Rashtriya Gokul Mission","intent":"government"},

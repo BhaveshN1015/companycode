@@ -98,8 +98,7 @@
   {"text": "यह ऐप किस कंपनी ने बनाया है", "intent": "general"},
   {"text": "Which company developed Pragati AI", "intent": "general"},
   {"text": "ऐप में फसल डायरी कैसे देखें", "intent": "general"},
-  {"text": "Fasal diary feature kahan hai app mein", "intent": "general"}
-  {"text":"app","intent":"general"},
+  {"text": "Fasal diary feature kahan hai app mein", "intent": "general"},{"text":"app","intent":"general"},
 {"text":"application","intent":"general"},
 {"text":"platform","intent":"general"},
 {"text":"portal","intent":"general"},
@@ -231,8 +230,7 @@
 {"text":"ऐप उपयोग","intent":"general"},
 {"text":"प्रगति एआई","intent":"general"},
 {"text":"मदद चाहिए","intent":"general"},
-{"text":"मार्गदर्शन चाहिए","intent":"general"}
-{"text":"जानकारी","intent":"general"},
+{"text":"मार्गदर्शन चाहिए","intent":"general"},{"text":"जानकारी","intent":"general"},
 {"text":"सहायता","intent":"general"},
 {"text":"सपोर्ट","intent":"general"},
 {"text":"गाइड","intent":"general"},
@@ -345,8 +343,7 @@
 {"text":"customer care number","intent":"general"},
 {"text":"feedback dena","intent":"general"},
 {"text":"bug report karna","intent":"general"},
-{"text":"help chahiye","intent":"general"}
-{"text":"hello","intent":"general"},
+{"text":"help chahiye","intent":"general"},{"text":"hello","intent":"general"},
 {"text":"hi","intent":"general"},
 {"text":"hey","intent":"general"},
 {"text":"namaste","intent":"general"},
@@ -458,8 +455,7 @@
 {"text":"bahut badhiya","intent":"general"},
 {"text":"mast app","intent":"general"},
 {"text":"shandar","intent":"general"},
-{"text":"bahut accha","intent":"general"}
-{"text":"तुम कौन हो","intent":"general"},
+{"text":"bahut accha","intent":"general"},{"text":"तुम कौन हो","intent":"general"},
 {"text":"आप कौन हो","intent":"general"},
 {"text":"तुम क्या हो","intent":"general"},
 {"text":"तुम क्या करते हो","intent":"general"},
@@ -541,8 +537,7 @@
 {"text":"म्हाने फीचर बतावो","intent":"general"},
 {"text":"थारी सहायता चाहिए","intent":"general"},
 {"text":"म्हाने सपोर्ट चाहिए","intent":"general"},
-{"text":"थारी जानकारी बतावो","intent":"general"}
-{"text":"कैसे हो","intent":"general"},
+{"text":"थारी जानकारी बतावो","intent":"general"},{"text":"कैसे हो","intent":"general"},
 {"text":"आप कैसे हो","intent":"general"},
 {"text":"क्या हाल है","intent":"general"},
 {"text":"सब ठीक है","intent":"general"},
@@ -639,8 +634,7 @@
 {"text":"म्हारी मदद कर दी","intent":"general"},
 {"text":"थारो जवाब बढ़िया है","intent":"general"},
 {"text":"थारी जानकारी काम आई","intent":"general"},
-{"text":"फेर मिलांसा","intent":"general"}
-{"text":"बताओ","intent":"general"},
+{"text":"फेर मिलांसा","intent":"general"},{"text":"बताओ","intent":"general"},
 {"text":"समझाओ","intent":"general"},
 {"text":"दिखाओ","intent":"general"},
 {"text":"सिखाओ","intent":"general"},
@@ -737,8 +731,7 @@
 {"text":"म्हाने ऐप शेयर करनी है","intent":"general"},
 {"text":"म्हाने दोस्त ने बुलाणो है","intent":"general"},
 {"text":"म्हाने रेटिंग देणी है","intent":"general"},
-{"text":"म्हाने समीक्षा लिखणी है","intent":"general"}
-{"text":"आप मेरे लिए क्या-क्या कर सकते हैं? मुझे अपने सभी फीचर्स के बारे में विस्तार से बताइए।","intent":"general"},
+{"text":"म्हाने समीक्षा लिखणी है","intent":"general"},{"text":"आप मेरे लिए क्या-क्या कर सकते हैं? मुझे अपने सभी फीचर्स के बारे में विस्तार से बताइए।","intent":"general"},
 {"text":"मुझे इस ऐप का पूरा उपयोग समझाइए ताकि मैं सभी सुविधाओं का सही तरीके से इस्तेमाल कर सकूँ।","intent":"general"},
 {"text":"मैं पहली बार इस ऐप का उपयोग कर रहा हूँ, कृपया मुझे शुरुआत से पूरी जानकारी दीजिए।","intent":"general"},
 {"text":"इस ऐप में कौन-कौन सी सुविधाएँ उपलब्ध हैं और उनका उपयोग कैसे किया जाता है?","intent":"general"},
@@ -780,8 +773,7 @@
 {"text":"म्हाने यो प्लेटफॉर्म रो पूरा परिचय देवो।","intent":"general"},
 {"text":"म्हाने बतावो कि यो ऐप बाकी ऐपां सूं क्यूँ अलग है।","intent":"general"},
 {"text":"म्हूं थारो उपयोग किण रीती सूं करूं?","intent":"general"},
-{"text":"म्हाने पूरी जानकारी आसान भाषा में समझावो सा।","intent":"general"}
-{"text":"मैं जानना चाहता हूँ कि यह ऐप मेरी खेती में किस प्रकार मदद कर सकता है और इसके कौन-कौन से फीचर मेरे लिए उपयोगी होंगे।","intent":"general"},
+{"text":"म्हाने पूरी जानकारी आसान भाषा में समझावो सा।","intent":"general"},{"text":"मैं जानना चाहता हूँ कि यह ऐप मेरी खेती में किस प्रकार मदद कर सकता है और इसके कौन-कौन से फीचर मेरे लिए उपयोगी होंगे।","intent":"general"},
 {"text":"अगर मुझे इस ऐप का कोई फीचर समझ में नहीं आए तो मैं कहाँ से सहायता प्राप्त कर सकता हूँ?","intent":"general"},
 {"text":"क्या आप मुझे इस ऐप के सभी फीचर्स एक-एक करके विस्तार से समझा सकते हैं?","intent":"general"},
 {"text":"मैं इस ऐप का सही उपयोग करना चाहता हूँ, कृपया मुझे पूरी प्रक्रिया समझाइए।","intent":"general"},
@@ -823,8 +815,7 @@
 {"text":"म्हाने यो ऐप रो पूरा फायदा किण रीती सूं मिल सकै?","intent":"general"},
 {"text":"अगर म्हाने कोई दिक्कत आवे तो थूं मदद करसी?","intent":"general"},
 {"text":"म्हाने यो ऐप रो हर एक सेक्शन समझावो।","intent":"general"},
-{"text":"थारो साथ लेकर खेती करूं तो म्हाने काई फायदा होसी?","intent":"general"}
-{"text":"मैं किसान हूँ और पहली बार इस ऐप का उपयोग कर रहा हूँ। कृपया मुझे शुरुआत से बताइए कि मुझे सबसे पहले क्या करना चाहिए।","intent":"general"},
+{"text":"थारो साथ लेकर खेती करूं तो म्हाने काई फायदा होसी?","intent":"general"},{"text":"मैं किसान हूँ और पहली बार इस ऐप का उपयोग कर रहा हूँ। कृपया मुझे शुरुआत से बताइए कि मुझे सबसे पहले क्या करना चाहिए।","intent":"general"},
 {"text":"क्या आप मुझे इस ऐप के सभी फीचर्स का उपयोग आसान भाषा में समझा सकते हैं ताकि मैं बिना किसी परेशानी के इसका इस्तेमाल कर सकूँ।","intent":"general"},
 {"text":"अगर मुझे किसी फीचर का उपयोग करना समझ में नहीं आए तो क्या आप हर स्टेप पर मेरी मदद करेंगे?","intent":"general"},
 {"text":"क्या मैं इस ऐप का उपयोग रोज़ अपनी खेती से जुड़े निर्णय लेने के लिए कर सकता हूँ?","intent":"general"},
@@ -866,8 +857,7 @@
 {"text":"म्हाने खेती खातर रोज सलाह चाहिए, थूं मदद करसी?","intent":"general"},
 {"text":"थूं मारा डिजिटल खेती साथी बन सकै?","intent":"general"},
 {"text":"म्हाने हर फीचर उदाहरण सहित समझावो।","intent":"general"},
-{"text":"थूं मने यो ऐप रो पूरा मास्टर बना दो।","intent":"general"}
-{"text":"मैं चाहता हूँ कि आप मेरे डिजिटल कृषि सलाहकार की तरह हमेशा मेरी खेती से जुड़े सवालों का सरल भाषा में जवाब दें।","intent":"general"},
+{"text":"थूं मने यो ऐप रो पूरा मास्टर बना दो।","intent":"general"},{"text":"मैं चाहता हूँ कि आप मेरे डिजिटल कृषि सलाहकार की तरह हमेशा मेरी खेती से जुड़े सवालों का सरल भाषा में जवाब दें।","intent":"general"},
 {"text":"अगर मुझे किसी फीचर का उपयोग करना नहीं आता तो क्या आप मुझे शुरुआत से पूरा तरीका समझा सकते हैं?","intent":"general"},
 {"text":"मैं चाहता हूँ कि आप मुझे हर दिन खेती से जुड़ी नई जानकारी और नई तकनीक के बारे में बताते रहें।","intent":"general"},
 {"text":"क्या आप मुझे इस ऐप के हर सेक्शन का उपयोग वास्तविक उदाहरण के साथ समझा सकते हैं?","intent":"general"},
@@ -909,8 +899,7 @@
 {"text":"थूं मारा हर सवाल रो जवाब देवो।","intent":"general"},
 {"text":"जद भी म्हाने दिक्कत आवे, थूं मदद करजो।","intent":"general"},
 {"text":"म्हाने थारो पूरा मार्गदर्शन चाहिए।","intent":"general"},
-{"text":"थूं मने स्मार्ट खेती सीखावजो।","intent":"general"}
-{"text":"मैं चाहता हूँ कि आप मेरी खेती से जुड़े हर सवाल का जवाब सरल भाषा में दें ताकि मैं आसानी से समझ सकूँ।","intent":"general"},
+{"text":"थूं मने स्मार्ट खेती सीखावजो।","intent":"general"},{"text":"मैं चाहता हूँ कि आप मेरी खेती से जुड़े हर सवाल का जवाब सरल भाषा में दें ताकि मैं आसानी से समझ सकूँ।","intent":"general"},
 {"text":"अगर मुझे किसी फीचर का उपयोग समझ में नहीं आए तो क्या आप मुझे दोबारा और आसान भाषा में समझा सकते हैं?","intent":"general"},
 {"text":"मैं रोज इस ऐप का उपयोग करना चाहता हूँ, कृपया मुझे बताइए कि इसका सबसे अच्छा उपयोग कैसे करूँ।","intent":"general"},
 {"text":"क्या आप मुझे इस ऐप के सभी फीचर्स एक-एक करके विस्तार से समझा सकते हैं?","intent":"general"},

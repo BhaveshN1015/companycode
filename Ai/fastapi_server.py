@@ -11,7 +11,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import tempfile
@@ -30,7 +29,7 @@ from logger import get_logger
 log = get_logger(__name__)
 
 # =============================================================================
-# SECTION 1 — CROP INDEX (built dynamically from dataset_index.json)
+# SECTION 1 — CROP INDEX (built dynamically from model.names)
 # =============================================================================
 
 # crop_name (lowercase) → set of class_ids that belong to it
@@ -41,36 +40,56 @@ _crop_display_names: dict[str, str] = {}
 _class_id_meta: dict[int, tuple[str, str, str]] = {}
 
 
-def _build_crop_index() -> None:
+def _build_crop_index(class_names: dict[int, str]) -> None:
     """
-    Reads dataset_index.json and builds:
+    Reads the loaded YOLO model's class names and builds:
       - _crop_class_ids: crop → set of class_ids
       - _crop_display_names: normalized crop → original crop name
       - _class_id_meta: class_id → (crop, category, class_name)
-    Zero hardcoded crop names — everything comes from the index file.
+    The crop index is derived from best.pt, not from any training dataset index.
     """
-    cfg = get_config()
-    index_path = cfg.paths.outputs_dir / "dataset_index.json"
+    from constants import CROP_ALIASES
 
-    if not index_path.exists():
-        log.warning("dataset_index.json not found at %s — crop filtering disabled", index_path)
-        return
+    import re
 
-    with open(index_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    def _strip_separators(value: str) -> str:
+        return re.sub(r"[\s\-_]+", "", value.lower().strip())
 
-    for record in data.get("images", []):
-        crop = record.get("crop_name", "")
-        category = record.get("category", "")
-        class_name = record.get("class_name", "")
-        class_id = record.get("class_id", -1)
+    def _normalize_crop_key(value: str) -> str:
+        return re.sub(r"[\s\-_]+", "_", value.strip()).strip("_")
 
-        if not crop or class_id < 0:
-            continue
+    alias_lookup: dict[str, str] = {}
+    for crop_name, aliases in CROP_ALIASES.items():
+        canonical = _normalize_crop_key(crop_name)
+        alias_lookup[_strip_separators(canonical)] = canonical
+        for alias in aliases:
+            alias_lookup[_strip_separators(alias)] = canonical
 
-        key = crop.lower()
-        _crop_display_names[key] = crop
-        _crop_class_ids.setdefault(key, set()).add(class_id)
+    def _infer_crop_key(class_name: str) -> str:
+        parts = [part for part in class_name.split("__") if part]
+        if not parts:
+            return _normalize_crop_key(class_name)
+
+        first = _normalize_crop_key(parts[0])
+        if len(parts) >= 2:
+            second = _normalize_crop_key(parts[1])
+            second_key = alias_lookup.get(_strip_separators(second))
+            if second_key and second_key != first:
+                combined = _normalize_crop_key(f"{parts[0]}_{parts[1]}")
+                return combined
+
+        return first
+
+    _crop_class_ids.clear()
+    _crop_display_names.clear()
+    _class_id_meta.clear()
+
+    for class_id, class_name in sorted(class_names.items()):
+        crop = _infer_crop_key(class_name)
+        category = class_name.rsplit("__", 1)[-1].lstrip("_")
+
+        _crop_display_names[crop] = crop
+        _crop_class_ids.setdefault(crop, set()).add(class_id)
         if class_id not in _class_id_meta:
             _class_id_meta[class_id] = (crop, category, class_name)
 
@@ -137,14 +156,12 @@ def _resolve_crop_key(crop_hint: str) -> Optional[str]:
 async def lifespan(app: FastAPI):
     cfg = get_config()
 
-    # Build crop index from dataset_index.json
-    _build_crop_index()
-
     # Warm up model
     weights = cfg.paths.checkpoints_dir / "best.pt"
     if weights.exists():
         from model_manager import get_model
-        get_model(weights_path=weights, device=cfg.hardware.device)
+        handle = get_model(weights_path=weights, device=cfg.hardware.device)
+        _build_crop_index(handle.class_names)
         log.info("Model warmed up: %s on %s", weights.name, cfg.hardware.device)
     else:
         log.warning("best.pt not found at %s", weights)
@@ -193,7 +210,7 @@ def health():
 @app.get("/crops")
 def get_crops():
     """
-    Returns all crops and their classes, read dynamically from dataset_index.json.
+    Returns all crops and their classes, read dynamically from the loaded model.
     Frontend uses this to populate the mandatory crop dropdown.
     """
     crops = []

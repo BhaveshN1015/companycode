@@ -1,39 +1,69 @@
 /**
- * Fertilizer Agent
- * Domain: Fertilizer products, NPK recommendations, organic alternatives
- * Data sources: FertilizerProduct, ctx.shared.soilReport (pre-loaded)
+ * Fertilizer Agent — Pragati AI Integration
  *
- * Fix 2: reads fertilizer type and crop from ctx.entities
- * Fix 8: reads SoilReport from ctx.shared — eliminates duplicate query with SoilAgent
- * Fix m9: nutrient thresholds now reference SoilStandard model (future) — kept
- *         as named constants instead of magic numbers for now
+ * Routes fertilizer-related questions through the shared Fertilizer Calculation Engine
+ * and Fertilizer AI service. Uses the SAME calculation logic as the Fertilizer Calculator.
+ *
+ * Data sources:
+ *   - ctx.entities.crop (pre-extracted)
+ *   - ctx.shared.soilReport (pre-loaded, optional)
+ *   - ctx.farmerProfile (farm area, location)
+ *
+ * Flow:
+ *   Extract crop + area → calculateFertilizer() → getFertilizerAIRecommendation() → structured result
+ *
+ * If crop is missing → asks farmer for crop
+ * If area missing → uses farmerProfile.farmSize or asks
+ * Soil report is always optional — crop-based calculation works without it
  */
 
-import { FertilizerProduct } from '../models/FertilizerProduct';
 import { SoilReport } from '../models/SoilReport';
 import { AgentContext, AgentResult } from './types';
 import { buildFallbackResult, buildErrorResult } from '../services/fallbackManager';
 import { createLogger } from '../utils/logger';
-import { createSafeRegex } from '../utils/regex';
+import { calculateFertilizer, type CalculationMethod } from '../services/fertilizerCalculatorService';
+import { getFertilizerAIRecommendation } from '../services/fertilizerAI';
 
 const log = createLogger('fertilizerAgent');
 
-// Named thresholds — replace magic numbers (Fix m9)
-const NITROGEN_LOW_THRESHOLD   = 200;
+const NITROGEN_LOW_THRESHOLD = 200;
 const PHOSPHORUS_LOW_THRESHOLD = 10;
-const POTASSIUM_LOW_THRESHOLD  = 150;
+const POTASSIUM_LOW_THRESHOLD = 150;
+
+function extractAreaValue(profile: AgentContext['farmerProfile']): { value: number; unit: 'bigha' | 'acre' | 'hectare' } | null {
+  if (!profile?.farmSize) return null;
+
+  const match = String(profile.farmSize).match(/([\d.]+)\s*(bigha|acre|hectare|ha|bigha)?/i);
+  if (!match) return null;
+
+  const value = parseFloat(match[1]);
+  if (isNaN(value) || value <= 0) return null;
+
+  const unitRaw = (match[2] || 'bigha').toLowerCase();
+  const unit = unitRaw.startsWith('hec') || unitRaw === 'ha' ? 'hectare'
+    : unitRaw === 'acre' ? 'acre'
+    : 'bigha';
+
+  return { value, unit };
+}
 
 export async function runFertilizerAgent(ctx: AgentContext): Promise<AgentResult> {
   try {
     const { userId, entities, shared, farmerProfile } = ctx;
 
-    // Fix 2: use pre-extracted entities
-    const fertilizerType = entities?.fertilizer || '';
-    const cropName       = entities?.crop || '';
+    const cropName = entities?.crop || '';
 
-    // Fix 8: use pre-loaded shared soil report — no duplicate DB query
+    if (!cropName) {
+      return {
+        agent: 'FertilizerAgent',
+        success: false,
+        data: { missingInfo: ['crop'] },
+        summary: 'कृपया अपनी फसल बताएं (जैसे: गेहूं, धान, मक्का, कपास) — ताकि मैं सही खाद की सलाह दे सकूं।',
+      };
+    }
+
+    // Get soil report from shared context
     let soilReport: any = shared?.soilReport || null;
-
     if (!soilReport) {
       log.debug('FertilizerAgent: shared context missing, querying DB directly', { userId });
       soilReport = await SoilReport.findOne({ farmerId: userId })
@@ -41,47 +71,69 @@ export async function runFertilizerAgent(ctx: AgentContext): Promise<AgentResult
         .lean();
     }
 
-    // Search fertilizer products
-    const filter: any = {};
-    if (fertilizerType) filter.$or = [
-      { name:            createSafeRegex(fertilizerType) },
-      { type:            createSafeRegex(fertilizerType) },
-      { nutrientContent: createSafeRegex(fertilizerType) },
-    ];
-    if (cropName) filter.suitableCrops = createSafeRegex(cropName);
+    // Determine calculation method
+    const hasSoilData = soilReport &&
+      (soilReport.nitrogen !== undefined || soilReport.phosphorus !== undefined || soilReport.potassium !== undefined);
+    const method: CalculationMethod = hasSoilData ? 'soil' : 'crop';
 
-    const products = await FertilizerProduct.find(filter).limit(5).lean();
+    // Extract area
+    const areaInfo = extractAreaValue(farmerProfile);
+    const areaValue = areaInfo?.value ?? 1;
+    const areaUnit = areaInfo?.unit ?? 'bigha';
 
-    const soilContext = soilReport ? {
-      soilType:                  soilReport.soilType,
-      ph:                        soilReport.pH,
-      nitrogenStatus:            soilReport.nitrogen < NITROGEN_LOW_THRESHOLD   ? 'Low' : 'Adequate',
-      phosphorusStatus:          soilReport.phosphorus < PHOSPHORUS_LOW_THRESHOLD ? 'Low' : 'Adequate',
-      potassiumStatus:           soilReport.potassium < POTASSIUM_LOW_THRESHOLD  ? 'Low' : 'Adequate',
-      organicRecommendations:    soilReport.recommendations?.organic,
-      fertilizerRecommendations: soilReport.recommendations?.fertilizer,
-    } : null;
+    // Build soil input for calculation engine
+    const soilInput = hasSoilData ? {
+      nitrogen: soilReport.nitrogen,
+      phosphorus: soilReport.phosphorus,
+      potassium: soilReport.potassium,
+      organicCarbon: soilReport.organicCarbon,
+      pH: soilReport.pH,
+    } : undefined;
 
-    if (products.length === 0 && !soilContext) {
-      return buildFallbackResult('FertilizerAgent', 'fertilizer');
-    }
+    // Run deterministic calculation (shared engine)
+    const calculation = calculateFertilizer({
+      crop: cropName,
+      areaValue,
+      areaUnit,
+      method,
+      soil: soilInput,
+    });
 
-    const productList = products.map((p: any) => ({
-      name:            p.name,
-      type:            p.type,
-      nutrientContent: p.nutrientContent,
-      applicationRate: p.applicationRate,
-      price:           p.price,
-      suitableCrops:   p.suitableCrops,
-    }));
+    // Get AI explanation
+    const aiRecommendation = await getFertilizerAIRecommendation({
+      calculation,
+      soilType: soilReport?.soilType,
+      soilPH: soilReport?.pH,
+      organicCarbon: soilReport?.organicCarbon,
+    });
+
+    // Build nutrient summary
+    const nStatus = calculation.nutrientStatus;
+    const nutrientSummary = [
+      `N: ${nStatus.nitrogen.state}${nStatus.nitrogen.available !== null ? ` (${nStatus.nitrogen.available} kg/ha available)` : ''}`,
+      `P: ${nStatus.phosphorus.state}${nStatus.phosphorus.available !== null ? ` (${nStatus.phosphorus.available} kg/ha available)` : ''}`,
+      `K: ${nStatus.potassium.state}${nStatus.potassium.available !== null ? ` (${nStatus.potassium.available} kg/ha available)` : ''}`,
+    ].join(', ');
+
+    const chemSummary = calculation.chemicalFertilizers.length > 0
+      ? calculation.chemicalFertilizers.map(f => `${f.name} ${f.quantityKg}kg`).join(', ')
+      : 'कोई रासायनिक खाद की आवश्यकता नहीं (मिट्टी में पोषक तत्व पर्याप्त)';
+
+    const summary = soilReport
+      ? `${calculation.crop} (${calculation.areaDisplay}): ${nutrientSummary}. ${aiRecommendation.summary} रासायनिक: ${chemSummary}`
+      : `${calculation.crop} (${calculation.areaDisplay}): कोई मिट्टी रिपोर्ट नहीं — फसल-आधारित गणना। ${aiRecommendation.summary}`;
 
     return {
-      agent:   'FertilizerAgent',
+      agent: 'FertilizerAgent',
       success: true,
-      data: { products: productList, soilContext, cropName },
-      summary: soilContext
-        ? `Soil N: ${soilContext.nitrogenStatus}, P: ${soilContext.phosphorusStatus}, K: ${soilContext.potassiumStatus}. Recommended fertilizers: ${soilContext.fertilizerRecommendations?.join(', ') || 'See soil report'}.`
-        : `Found ${products.length} fertilizer product(s)${cropName ? ` for ${cropName}` : ''}.`,
+      data: {
+        calculation,
+        aiRecommendation,
+        soilUsed: !!soilReport,
+        cropName,
+        nutrientSummary,
+      },
+      summary,
     };
   } catch (err: any) {
     log.error('FertilizerAgent error', { error: err?.message });

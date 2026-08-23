@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   FaLeaf, FaCloudSun, FaShoppingCart, FaTags, FaUser, FaTachometerAlt,
   FaRobot, FaSeedling, FaMicroscope, FaGavel, FaUsers, FaBookOpen,
-  FaGift, FaBell, FaCog, FaMapMarkerAlt, FaChevronRight, FaTimes, FaGlobe,
+  FaGift, FaBell, FaCog, FaMapMarkerAlt, FaChevronRight, FaTimes, FaGlobe, FaFlask,
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { useAIAssistant } from '@/context/AIAssistantContext';
@@ -34,6 +34,7 @@ export default function FarmerSidebar({ open, onClose, onProfileClick }: { open?
     { key: 'marketPrice',  href: '/dashboard/farmer/market',         icon: FaTags },
     { key: 'marketplace',  href: '/marketplace',                     icon: FaShoppingCart },
     { key: 'soilHealth',   href: '/dashboard/farmer/soil-health',    icon: FaLeaf },
+    { key: 'fertilizerCalc', href: '/dashboard/farmer/fertilizer-calculator', icon: FaFlask },
     { key: 'govtSchemes',  href: '/schemes',                         icon: FaGavel },
     { key: 'community',    href: '/schemes',                         icon: FaUsers },
     { key: 'learning',     href: '/blog',                            icon: FaBookOpen },

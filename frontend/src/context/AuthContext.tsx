@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { requestCardOtp, verifyCardOtp, type CardOtpRequest, type CardLoginResult } from '@/services/cardLogin';
 
 export type UserRole = 'farmer' | 'shopkeeper';
 
@@ -12,6 +13,8 @@ export interface User {
     phone?: string;
     avatar?: string;
     profileImage?: string;
+    kisanCardNumber?: string;
+    kisanCardStatus?: 'active' | 'pending' | 'suspended';
 }
 
 interface AuthContextType {
@@ -23,6 +26,8 @@ interface AuthContextType {
     verifyEmailOtp: (email: string, otp: string) => Promise<void>;
     login: (email: string, password: string, preferredRole?: UserRole) => Promise<User>;
     register: (userData: RegisterData, preferredRole?: UserRole) => Promise<User>;
+    requestCardOtp: (cardNumber: string, mobile: string) => Promise<CardOtpRequest>;
+    loginWithCardOtp: (cardNumber: string, mobile: string, otp: string) => Promise<User>;
     logout: () => void;
 }
 
@@ -239,6 +244,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return loggedUser;
     };
 
+    // ── AgroudAn Kisan Card login (card number + registered mobile + OTP) ───────
+    // Reuses the exact same JWT + localStorage session pattern as `login` so the
+    // existing dashboard/auth flow is used. No new auth system.
+    const requestCardOtp = async (cardNumber: string, mobile: string): Promise<CardOtpRequest> => {
+        const data = await requestCardOtp(cardNumber, mobile);
+        return data;
+    };
+
+    const loginWithCardOtp = async (cardNumber: string, mobile: string, otp: string): Promise<User> => {
+        const data = await verifyCardOtp(cardNumber, mobile, otp);
+        const normalizedRole = normalizeRole(data.user?.role);
+        const loggedUser: User = {
+            id: data.user?.id,
+            email: data.user?.email,
+            name: data.user?.name,
+            role: normalizedRole,
+            phone: data.user?.phone,
+        };
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(loggedUser));
+        setUser(loggedUser);
+        setRole(loggedUser.role);
+        window.dispatchEvent(new Event('auth-session-changed'));
+        return loggedUser;
+    };
+
     const logout = () => {
         localStorage.removeItem('user');
         localStorage.removeItem('authToken');
@@ -257,6 +288,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 verifyEmailOtp,
                 login,
                 register,
+                requestCardOtp,
+                loginWithCardOtp,
                 logout,
             }}
         >
@@ -269,4 +302,16 @@ export function useAuth() {
     const context = useContext(AuthContext);
     if (!context) throw new Error('useAuth must be used within AuthProvider');
     return context;
+}
+
+export function attachKisanCard(cardNumber: string, status: 'active' | 'pending' | 'suspended' = 'active') {
+    if (typeof window === 'undefined') return;
+    const raw = localStorage.getItem('user');
+    if (!raw) return;
+    try {
+        const parsed = JSON.parse(raw) as User;
+        const updated = { ...parsed, kisanCardNumber: cardNumber, kisanCardStatus: status };
+        localStorage.setItem('user', JSON.stringify(updated));
+        window.dispatchEvent(new Event('auth-session-changed'));
+    } catch { /* ignore */ }
 }

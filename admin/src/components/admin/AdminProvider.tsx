@@ -24,6 +24,7 @@ import {
   FaMapMarkerAlt,
   FaClipboardList,
   FaBriefcase,
+  FaIdCard,
 } from 'react-icons/fa';
 import {
   API_BASE,
@@ -71,6 +72,7 @@ const navItems = [
   { href: '/create-scheme', label: 'Govt Schemes', icon: FaLeaf },
   { href: '/create-gallery', label: 'Gallery', icon: FaPhotoVideo },
   { href: '/users', label: 'Users', icon: FaUsers },
+  { href: '/kisan-cards', label: 'Kisan Cards', icon: FaIdCard },
   { href: '/ai-analytics', label: 'AI Analytics', icon: FaRobot },
   { href: '/farmer-stories', label: 'Farmer Stories', icon: FaFilm },
   { href: '/shopkeeper-verification', label: 'Verification Center', icon: FaUserShield },

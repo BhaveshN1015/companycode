@@ -32,6 +32,7 @@ export type IntentType =
   | 'disease'
   | 'crop'
   | 'soil'
+  | 'fertilizer'
   | 'weather'
   | 'market'
   | 'government'
@@ -56,6 +57,13 @@ const INTENT_RULES: IntentRule[] = [
       /\b(namaste|namaskar|namaskara|namastey|namasthe)\b/i,
       /\b(ram\s*ram|jai\s*shree?\s*ram|jai\s*shri\s*krishna|radhe\s*radhe|khamma\s*ghani|sat\s*sri\s*akal|sasriyakal|adaab|salaam|vanakkam|nomoshkar|pranam|pranaam)\b/i,
       /\b(suprabhat|shubh\s*prabhat|shubh\s*din|kya\s*haal|kaise\s*ho|kaisa\s*hai)\b/i,
+    ],
+  },
+  {
+    intent: 'fertilizer',
+    patterns: [
+      /\bfertilizer\b|\burea\b|\bdap\b|\bnpk\b|\bmop\b|\bssp\b|\bfarm\s*yard\s*manure\b|\bvermicompost\b|\bbiofertilizer\b|\bfoliar\s*spray\b|\btop\s*dressing\b|\bfertigation\b|\bsulphur\s*fertilizer\b|\bzinc\s*sulphate\b|\bferrous\s\sulphate\b|\bmagnesium\s\sulphate\b|\bcalcium\s\snitrate\b|\bammonium\s\sulphate\b|\bpotassium\s\sulphate\b|\bneem\s\scoated\b|\bfertilizer\s*recommend|\bfertilizer\s*calculate|\bcalculate\s*fertilizer\b|\bwhich\s*fertilizer\b|\bwhat\s*fertilizer\b|\bkhad\s*batao|\bkhad\s*salah/i,
+      /यूरिया|डीएपी|एनपीके|एमओपी|एसएसपी|गोबर\s*की\s*खाद|वर्मीकम्पोस्ट|जैव\s*उर्वरक|छिड़काव|टॉप\s*ड्रेसिंग|फर्टिगेशन|सल्फर|जिंक|आयरन|मैग्नीशियम|कैल्शियम|पोटाश|खाद(कौन|की|कितनी|कैसे|डालूं|डालनी|बताओ|सलाह|सिफारिश)|उर्वरक(कौन|की|कितनी|कैसे|डालूं|डालनी|बताओ|सलाह|सिफारिश)|मिट्टी\s*में\s*(नाइट्रोजन|फॉस्फोरस|पोटाश|कमी|कम|deficien)/,
     ],
   },
   {
@@ -193,7 +201,7 @@ export async function detectIntentAsync(message: string): Promise<IntentType> {
 
       if (bridgeIntent && !data.is_unknown) {
         const valid: IntentType[] = [
-          'greeting', 'disease', 'crop', 'soil', 'weather', 'market',
+          'greeting', 'disease', 'crop', 'soil', 'fertilizer', 'weather', 'market',
           'government', 'kvk', 'irrigation', 'machinery', 'emergency',
           'navigation', 'voice_command', 'general',
         ];
@@ -230,6 +238,7 @@ export function intentToPageContext(intent: IntentType): string {
     disease:       'disease',
     crop:          'crop',
     soil:          'soil',
+    fertilizer:    'fertilizer',
     weather:       'weather',
     market:        'market',
     government:    'government',
@@ -253,6 +262,7 @@ export function intentLabel(intent: IntentType): string {
     disease:       'Disease Detection',
     crop:          'Crop Advisory',
     soil:          'Soil Health',
+    fertilizer:    'Fertilizer Calculator',
     weather:       'Weather',
     market:        'Market Prices',
     government:    'Government Schemes',

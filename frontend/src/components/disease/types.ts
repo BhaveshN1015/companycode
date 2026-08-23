@@ -138,42 +138,68 @@ export type ScanResult = {
 export type HistoryItem = ScanResult & { createdAt: string };
 
 // ─── Language picker ──────────────────────────────────────────────────────────
-// Resolves { en, hi } objects, legacy plain strings, and JSON-stringified objects.
-// Rule: langCode === 'en' → .en  |  anything else → .hi (fallback to .en)
-// NEVER returns [object Object], JSON syntax, or literal \n characters.
-export function pickField(field: any, langCode: string): string {
-  if (field === null || field === undefined) return '';
+// Safely resolves { en, hi }, nested objects, arrays, legacy strings, and JSON-stringified objects.
+// Rule: selected language → preferred, then en → hi → first valid text value.
+export function getLocalizedText(value: unknown, langCode = 'en'): string {
+  if (value === null || value === undefined) return '';
 
-  // Fix literal \n / \r\n escape sequences — convert to real newlines
-  const fixNl = (s: string): string =>
-    s.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n');
+  const normalize = (s: string): string =>
+    s.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').trim();
 
-  if (typeof field === 'string') {
-    const s = field.trim();
-    if (!s) return '';
-    // Detect legacy JSON-stringified object: '{"en":"...","hi":""}'  
-    if (s.startsWith('{')) {
+  if (typeof value === 'string') {
+    const raw = value.trim();
+    if (!raw) return '';
+
+    if (raw.startsWith('{')) {
       try {
-        const parsed = JSON.parse(s);
+        const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-          const en = typeof parsed.en === 'string' ? parsed.en : '';
-          const hi = typeof parsed.hi === 'string' ? parsed.hi : '';
-          return fixNl(langCode === 'en' ? en : (hi || en));
+          return getLocalizedText(parsed, langCode);
         }
-      } catch { /* not JSON — treat as plain text */ }
+      } catch {
+        // treat as plain text below
+      }
     }
-    return fixNl(s);
+
+    return normalize(raw);
   }
 
-  // Reject arrays, numbers, booleans — only plain objects are valid multilingual fields
-  if (typeof field !== 'object' || Array.isArray(field)) return '';
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
 
-  // Proper { en, hi } object — extract only the string values, never coerce objects
-  const enRaw = field.en;
-  const hiRaw = field.hi;
-  const en = typeof enRaw === 'string' ? fixNl(enRaw) : '';
-  const hi = typeof hiRaw === 'string' ? fixNl(hiRaw) : '';
-  return langCode === 'en' ? en : (hi || en);
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => getLocalizedText(item, langCode))
+      .filter(Boolean)
+      .join('\n');
+  }
+
+  if (typeof value === 'object') {
+    const obj = value as Record<string, unknown>;
+    const preferredLangs = [langCode, 'en', 'hi'];
+
+    for (const key of preferredLangs) {
+      if (obj[key] !== undefined && obj[key] !== null) {
+        const localized = getLocalizedText(obj[key], langCode);
+        if (localized) return localized;
+      }
+    }
+
+    for (const [key, item] of Object.entries(obj)) {
+      if (['en', 'hi', 'lang', 'language', 'code'].includes(key)) continue;
+      const localized = getLocalizedText(item, langCode);
+      if (localized) return localized;
+    }
+
+    return '';
+  }
+
+  return String(value);
+}
+
+export function pickField(field: any, langCode: string): string {
+  return getLocalizedText(field, langCode);
 }
 
 // ─── Field resolvers — language-aware, handle both old and new schema ─────────

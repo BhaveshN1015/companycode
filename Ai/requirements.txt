@@ -6,9 +6,9 @@
 # =============================================================================
 
 # --- Core Deep Learning ---
-torch==2.3.1
-torchvision==0.18.1
-torchaudio==2.3.1
+torch==2.6.0
+torchvision==0.21.0
+torchaudio==2.6.0
 
 # --- YOLO / Ultralytics ---
 ultralytics==8.2.103
@@ -29,7 +29,7 @@ seaborn==0.13.2
 # --- ONNX Export ---
 onnx==1.16.1
 onnxruntime==1.18.1
-onnxsim==0.4.36
+onnxsim==0.7.3
 
 # --- Speech To Text (Faster-Whisper) ---
 faster-whisper==1.0.3

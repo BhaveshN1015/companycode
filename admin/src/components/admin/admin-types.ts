@@ -14,6 +14,7 @@ export type Overview = {
     marketplaceListings: number;
     blogPosts: number;
     govtSchemes: number;
+    kisanCards: number;
   };
   recentUsers: AdminUser[];
   recentRecommendations: Recommendation[];
@@ -39,6 +40,10 @@ export type AdminUser = {
   lastLogin?: string;
   createdAt?: string;
   updatedAt?: string;
+  /** AgroudAn Kisan Card number for this farmer (null when not registered) */
+  kisanCardNumber?: string | null;
+  /** AgroudAn Kisan Card status for this farmer (null when not registered) */
+  kisanCardStatus?: string | null;
 };
 
 export type UserSummary = {
@@ -47,6 +52,8 @@ export type UserSummary = {
   admins: number;
   verified: number;
   active: number;
+  /** Farmers who actually hold a registered AgroudAn Kisan Card */
+  cards: number;
 };
 
 export type UserPagination = {
@@ -623,4 +630,70 @@ export type KVKListResponse = {
   data: KVKRecord[];
   pagination: { total: number; page: number; limit: number; pages: number };
   summary: KVKSummary;
+};
+
+// ─── AgroudAn Kisan Card (admin) Types ────────────────────────────────────────
+
+export type AdminKisanCard = {
+  _id: string;
+  cardNumber: string;
+  cardStatus: 'active' | 'pending' | 'suspended';
+  isComplete: boolean;
+  fullName: string;
+  location: {
+    state?: string;
+    district?: string;
+    tehsil?: string;
+    village?: string;
+  };
+  agriculture: {
+    totalLandArea: number;
+    landUnit: 'acres' | 'hectares' | 'bigha';
+    mainCrops: string[];
+  };
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+/** Full, admin-viewable farmer card detail returned by /api/kisan-card/admin/user/:userId */
+export type AdminFarmerCardDetail = {
+  _id: string;
+  userId?: string;
+  cardNumber: string;
+  cardStatus: 'active' | 'pending' | 'suspended';
+  isComplete: boolean;
+  fullName: string;
+  fatherName?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  location: {
+    country: string;
+    state: string;
+    district: string;
+    tehsil: string;
+    village: string;
+    pincode: string;
+    coordinates: { latitude: number; longitude: number };
+  };
+  agriculture: {
+    totalLandArea: number;
+    landUnit: 'acres' | 'hectares' | 'bigha';
+    farmingCategory: string;
+    mainCrops: string[];
+    annualIncomeRange: string;
+  };
+  issuedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type KisanCardSummary = {
+  total: number;
+};
+
+export type KisanCardsResponse = {
+  success: boolean;
+  data: AdminKisanCard[];
+  pagination: { total: number; page: number; limit: number; pages: number };
+  summary?: KisanCardSummary;
 };

@@ -23,6 +23,7 @@ export type GovtScheme = {
     keywords: string[];
     schemeType: SchemeType;
     state?: string;
+    cardEligibility?: SchemeEligibility;
     status: 'draft' | 'published';
     source: 'admin' | 'api';
     publishedAt?: string;
@@ -58,3 +59,37 @@ export async function fetchSchemeBySlug(slug: string): Promise<GovtScheme> {
     if (!response.ok) throw new Error(payload?.error || 'Failed to fetch scheme details');
     return payload?.data as GovtScheme;
 }
+
+// ─── Phase 4: per-scheme eligibility derived from the farmer's own Kisan Card ───
+
+export type SchemeEligibilityStatus = 'eligible' | 'not-eligible' | 'information-required' | 'unknown';
+
+export interface SchemeEligibility {
+    status: SchemeEligibilityStatus;
+    eligible: boolean;
+    reasons: string[];
+    missingFields: string[];
+    confidence: number;
+}
+
+export interface KisanCardEligibilityResponse {
+    success: boolean;
+    hasCard: boolean;
+    cardSummary: { cardNumber: string; cardStatus: string; state: string; district: string } | null;
+    updatedAt?: string;
+    eligibility: Record<string, SchemeEligibility>;
+}
+
+export const fetchSchemeEligibility = async (): Promise<KisanCardEligibilityResponse | null> => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+    if (!token) return null;
+
+    const response = await fetch(`${API_ROOT}/schemes/my-eligibility`, {
+        cache: 'no-store',
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    if (response.status === 401) return null; // not logged in -> treat as no personalization
+    const payload = await parseJson(response);
+    if (!response.ok) throw new Error(payload?.error || 'Failed to fetch scheme eligibility');
+    return payload as KisanCardEligibilityResponse | null;
+};

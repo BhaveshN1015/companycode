@@ -96,6 +96,11 @@ async function runDedicatedAgent(
       const [soil, fert] = await Promise.all([runSoilAgent(ctx), runFertilizerAgent(ctx)]);
       return { agentName: 'SoilAgent', results: [soil, fert], yoloUsed: false, kbUsed: soil.success };
     }
+    case 'fertilizer': {
+      const result = await runFertilizerAgent(ctx);
+      const kbUsed = result.success && !!result.data && Object.keys(result.data).length > 0;
+      return { agentName: 'FertilizerAgent', results: [result], yoloUsed: false, kbUsed };
+    }
     case 'weather': {
       const result = await runWeatherAgent(ctx);
       return { agentName: 'WeatherAgent', results: [result], yoloUsed: false, kbUsed: result.success };

@@ -5,6 +5,7 @@ import { AuthenticatedRequest, authenticate, requireAdmin } from '../middleware/
 import { schemeUpload, getSchemeFileUrl, deleteSchemeFile } from '../utils/schemeUpload';
 import { SevaMitraProfile } from '../models/SevaMitraProfile';
 import { SchemeApplication } from '../models/SchemeApplication';
+import { AgroudAnKisanCard } from '../models/AgroudAnKisanCard';
 import bcrypt from 'bcryptjs';
 import { sendSms, buildReceiptSms } from '../utils/smsNotification';
 
@@ -407,6 +408,273 @@ router.delete('/admin/:id', authenticate, requireAdmin, async (req: Authenticate
         return res.json({ success: true, message: 'Government scheme deleted successfully' });
     } catch (error) {
         return res.status(500).json({ error: 'Failed to delete government scheme' });
+    }
+});
+
+// ─── Public: scheme detail by slug ───────────────────────────────────────────
+
+// ─── Phase 4: Kisan Card–driven scheme eligibility helpers ────────────────────
+// Identity is derived from the JWT (authenticate) only — no client-supplied farmer
+// id or card number is trusted. The Kisan Card is read for the authenticated user.
+
+const ACRES_TO_HECTARES = 0.404686;
+const BIGHA_TO_HECTARES = 0.25;
+
+const cardAge = (dateOfBirth?: string): number | null => {
+    if (!dateOfBirth) return null;
+    const d = new Date(dateOfBirth);
+    if (Number.isNaN(d.getTime())) return null;
+    const now = new Date();
+    let age = now.getFullYear() - d.getFullYear();
+    const m = now.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+    return age > 0 ? age : null;
+};
+
+const convertToHectares = (area: number, unit?: string): number | null => {
+    const num = Number(area);
+    if (!Number.isFinite(num) || num <= 0) return null;
+    switch ((unit || 'hectares').toLowerCase()) {
+        case 'acres':
+            return num * ACRES_TO_HECTARES;
+        case 'bigha':
+            return num * BIGHA_TO_HECTARES;
+        case 'hectares':
+        default:
+            return num;
+    }
+};
+
+const parseAnnualIncomeRange = (range?: string): number | null => {
+    if (!range) return null;
+    const text = range.replace(/[₹,]/g, '').toLowerCase();
+    let multiplier = 1;
+    if (/करोड़|क़रोड़|crore/.test(text)) multiplier = 10000000;
+    else if (/लाख|lakh/.test(text)) multiplier = 100000;
+    else if (/हज़ार|हजार|thousand|k\b/.test(text)) multiplier = 1000;
+    const nums = text.match(/\d+(\.\d+)?/g);
+    if (!nums || nums.length === 0) return null;
+    const vals = nums.map((n) => parseFloat(n) * multiplier);
+    if (vals.length >= 2) return vals[1]; // range -> upper bound
+    const v = vals[0];
+    if (/above|more than|greater than|\bover\b|>/.test(text)) return v + 1; // just above the stated figure
+    if (/below|under|less than|<=|at most|max/.test(text)) return v; // upper bound of a "below" range
+    return v;
+};
+
+const cardToFarmerProfile = (card: any) => {
+    const ag = card?.agriculture || {};
+    const loc = card?.location || {};
+    const ob = card?.otherBusiness || {};
+    const farmingCategory = (ag.farmingCategory || '').trim().toLowerCase();
+    let occupation = 'any';
+    if (farmingCategory) {
+        occupation = normalizeOccupation(farmingCategory);
+        if (occupation === 'any') occupation = 'farmer';
+    }
+    const personalIncome = card.personalIncome ? Number(card.personalIncome) : null;
+    const familyIncome = card.familyIncome ? Number(card.familyIncome) : null;
+    const income = parseAnnualIncomeRange(ag.annualIncomeRange) || familyIncome || personalIncome;
+    return {
+        age: cardAge(card?.dateOfBirth),
+        income,
+        personalIncome,
+        familyIncome,
+        land: convertToHectares(ag.totalLandArea, ag.landUnit),
+        state: (loc.state || '').trim().toLowerCase(),
+        gender: normalizeGender(card?.gender || ''),
+        category: 'any',
+        occupation,
+        otherBusiness: ob.hasOtherBusiness ? {
+            businessType: ob.businessType || '',
+            businessDetails: ob.businessDetails || '',
+        } : null,
+    };
+};
+
+type CardEligibilityResult = {
+    status: 'eligible' | 'not-eligible' | 'information-required' | 'unknown';
+    eligible: boolean;
+    reasons: string[];
+    missingFields: string[];
+    confidence: number;
+};
+
+const evaluateCardEligibility = (scheme: any, farmer: ReturnType<typeof cardToFarmerProfile>): CardEligibilityResult => {
+    const rules = scheme.eligibilityRules || {};
+    let eligible = true;
+    const reasons: string[] = [];
+    const missingFields: string[] = [];
+
+    const farmerState = (farmer.state || '').trim().toLowerCase();
+    const farmerStatePresent = !!farmerState;
+    const isStateScheme = scheme.schemeType === 'state';
+
+    const hasRuleFields =
+        rules.minAge != null ||
+        rules.maxAge != null ||
+        rules.maxIncome != null ||
+        rules.maxLandHectares != null ||
+        (rules.genders && rules.genders.length) ||
+        (rules.occupations && rules.occupations.length) ||
+        (rules.categories && rules.categories.length) ||
+        (rules.states && rules.states.length);
+
+    // State-level scheme location check (uses the card's state)
+    if (isStateScheme && scheme.state) {
+        const schemeState = scheme.state.trim().toLowerCase();
+        if (farmerStatePresent) {
+            if (schemeState !== farmerState) {
+                eligible = false;
+                reasons.push('यह योजना केवल ' + scheme.state + ' के लिए है।');
+            }
+        } else {
+            missingFields.push('state');
+        }
+    }
+
+    if (rules) {
+        const ruleStates = normalizeStringArray(rules.states);
+        if (ruleStates.length > 0 && !ruleStates.includes('any')) {
+            if (farmerStatePresent) {
+                if (!ruleStates.includes(farmerState)) {
+                    eligible = false;
+                    reasons.push('यह योजना केवल ' + ruleStates.join(', ') + ' राज्यों के लिए है।');
+                }
+            } else {
+                missingFields.push('state');
+            }
+        }
+
+        if (rules.minAge != null) {
+            if (farmer.age != null) {
+                if (farmer.age < rules.minAge) {
+                    eligible = false;
+                    reasons.push('आपकी उम्र इस योजना की न्यूनतम आयु सीमा से कम है।');
+                }
+            } else {
+                missingFields.push('age');
+            }
+        }
+        if (rules.maxAge != null) {
+            if (farmer.age != null) {
+                if (farmer.age > rules.maxAge) {
+                    eligible = false;
+                    reasons.push('आपकी उम्र इस योजना की अधिकतम आयु सीमा से अधिक है।');
+                }
+            } else {
+                missingFields.push('age');
+            }
+        }
+        if (rules.maxIncome != null) {
+            if (farmer.income != null) {
+                if (farmer.income > rules.maxIncome) {
+                    eligible = false;
+                    reasons.push('आपकी दर्ज आय इस योजना की निर्धारित सीमा से अधिक है।');
+                }
+            } else {
+                missingFields.push('income');
+            }
+        }
+        if (rules.maxLandHectares != null) {
+            if (farmer.land != null) {
+                if (farmer.land > rules.maxLandHectares) {
+                    eligible = false;
+                    reasons.push('आपका कृषि भूमि क्षेत्र इस योजना की अधिकतम सीमा से अधिक है।');
+                }
+            } else {
+                missingFields.push('land');
+            }
+        }
+
+        const ruleGenders = normalizeStringArray(rules.genders);
+        if (ruleGenders.length > 0 && !ruleGenders.includes('any')) {
+            if (farmer.gender && farmer.gender !== 'any') {
+                if (!ruleGenders.includes(farmer.gender)) {
+                    eligible = false;
+                    reasons.push('यह योजना ' + (ruleGenders.includes('female') ? 'महिला' : 'पुर्ष') + ' के लिए है।');
+                }
+            } else {
+                missingFields.push('gender');
+            }
+        }
+
+        const ruleOccupations = normalizeStringArray(rules.occupations);
+        if (ruleOccupations.length > 0 && !ruleOccupations.includes('any')) {
+            if (farmer.occupation && farmer.occupation !== 'any') {
+                if (!ruleOccupations.includes(farmer.occupation)) {
+                    eligible = false;
+                    reasons.push('यह योजना ' + ruleOccupations.join('/ ') + ' के लिए है।');
+                }
+            } else {
+                missingFields.push('occupation');
+            }
+        }
+
+        const ruleCategories = normalizeStringArray(rules.categories);
+        if (ruleCategories.length > 0 && !ruleCategories.includes('any')) {
+            if (farmer.category && farmer.category !== 'any') {
+                if (!ruleCategories.includes(farmer.category)) {
+                    eligible = false;
+                    reasons.push('यह योजना केवल ' + ruleCategories.join(', ') + ' वर्गों के लिए है।');
+                }
+            } else {
+                missingFields.push('category');
+            }
+        }
+    }
+
+    let status: CardEligibilityResult['status'];
+    if (missingFields.length > 0) {
+        status = 'information-required';
+    } else if (!hasRuleFields && !isStateScheme && !scheme.state) {
+        status = 'unknown';
+    } else if (eligible) {
+        status = 'eligible';
+    } else {
+        status = 'not-eligible';
+    }
+
+    let confidence: number;
+    if (status === 'eligible') confidence = 100;
+    else if (status === 'information-required') confidence = 60;
+    else if (status === 'unknown') confidence = 50;
+    else confidence = Math.max(10, 100 - reasons.length * 30);
+
+    return { status, eligible, reasons, missingFields, confidence };
+};
+
+// ─── Authenticated: per-scheme eligibility from the caller's own Kisan Card ────
+// Returns eligibility for every published scheme, keyed by scheme id.
+router.get('/my-eligibility', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        if (req.user?.role !== 'farmer') {
+            return res.json({ success: true, hasCard: false, cardSummary: null, eligibility: {} });
+        }
+
+        const card = await AgroudAnKisanCard.findOne({ userId: req.user!.userId }).lean();
+        if (!card) {
+            return res.json({ success: true, hasCard: false, cardSummary: null, eligibility: {} });
+        }
+
+        const farmer = cardToFarmerProfile(card);
+        const schemes = await GovtScheme.find({ status: 'published' }).lean();
+
+        const eligibility: Record<string, CardEligibilityResult> = {};
+        schemes.forEach((scheme: any) => {
+            eligibility[scheme._id.toString()] = evaluateCardEligibility(scheme, farmer);
+        });
+
+        const cardSummary = {
+            cardNumber: card.cardNumber,
+            cardStatus: card.cardStatus,
+            state: card.location?.state || '',
+            district: card.location?.district || '',
+        };
+
+        return res.json({ success: true, hasCard: true, cardSummary, updatedAt: card.updatedAt, eligibility });
+    } catch (error) {
+        return res.status(500).json({ error: 'Failed to compute scheme eligibility' });
     }
 });
 

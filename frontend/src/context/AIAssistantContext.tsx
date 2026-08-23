@@ -13,7 +13,7 @@ export interface PageData {
   pageContext:
     | 'disease' | 'crop' | 'soil' | 'weather' | 'market'
     | 'government' | 'kvk' | 'farm_diary' | 'shop' | 'admin'
-    | 'dashboard' | 'ui';
+    | 'dashboard' | 'fertilizer' | 'ui';
   diseaseResult?: {
     diseaseName?: string; cropName?: string; confidence?: number;
     severity?: string; causes?: string; organicSolution?: string;

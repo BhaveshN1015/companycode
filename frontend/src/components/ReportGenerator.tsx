@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { fetchNearestKVK, KVKCenter } from '@/services/kvk';
+import { getLocalizedText } from '@/components/disease/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -310,27 +311,38 @@ function ReportSection({ section }: { section: ReportSection }) {
 export function buildDiseaseReportData(
   result: any,
   userName?: string,
+  langCode = 'en',
 ): ReportData {
   const SEV_COLOR_MAP: Record<string, string> = {
     critical: '#dc2626', high: '#ea580c', medium: '#d97706', low: '#16a34a', healthy: '#059669',
   };
-  const sevColor = SEV_COLOR_MAP[result.severityLevel?.toLowerCase()] || '#64748b';
+  const sevColor = SEV_COLOR_MAP[String(result.severityLevel || '').toLowerCase()] || '#64748b';
   const date = result.createdAt
     ? new Date(result.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })
     : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
 
-  const symptoms = [result.symptoms, result.symptomsDescription, result.leafSymptoms, result.stemSymptoms, result.rootSymptoms, result.fruitSymptoms].filter(Boolean).join('\n');
-  const organic  = result.organicSolution || result.organicTreatment || '';
-  const chemical = result.chemicalSolution || result.chemicalTreatment || result.treatmentDescription || result.treatment || '';
-  const prevention = result.prevention || result.preventionMethods || result.preventionDescription || '';
+  const text = (value: unknown) => getLocalizedText(value, langCode);
+
+  const symptoms = [
+    result.symptoms,
+    result.symptomsDescription,
+    result.leafSymptoms,
+    result.stemSymptoms,
+    result.rootSymptoms,
+    result.fruitSymptoms,
+  ].map((v) => text(v)).filter(Boolean).join('\n');
+  const organic = text(result.organicSolution ?? result.organicTreatment ?? '');
+  const chemical = text(result.chemicalSolution ?? result.chemicalTreatment ?? result.treatmentDescription ?? result.treatment ?? '');
+  const prevention = text(result.prevention ?? result.preventionMethods ?? result.preventionDescription ?? '');
 
   const sections: ReportSection[] = [];
 
-  if (result.description) {
+  const descriptionText = text(result.description);
+  if (descriptionText) {
     sections.push({
       title: 'Disease Description', emoji: '📋',
-      content: result.description,
-      details: result.descriptionHindi ? [{ label: 'हिंदी विवरण', value: result.descriptionHindi }] : [],
+      content: descriptionText,
+      details: result.descriptionHindi ? [{ label: 'हिंदी विवरण', value: text(result.descriptionHindi) }] : [],
     });
   }
   if (symptoms) sections.push({ title: 'Symptoms', emoji: '⚠️', content: symptoms });
@@ -338,41 +350,43 @@ export function buildDiseaseReportData(
     sections.push({
       title: 'Organic Treatment', emoji: '🌿', color: '#16a34a', content: organic,
       details: [
-        { label: 'Preparation', value: result.preparationMethod },
-        { label: 'Frequency', value: result.frequency },
-        { label: 'Safety Notes', value: result.safetyNotes },
-      ],
+        { label: 'Preparation', value: text(result.preparationMethod) },
+        { label: 'Frequency', value: text(result.frequency) },
+        { label: 'Safety Notes', value: text(result.safetyNotes) },
+      ].filter((d) => d.value),
     });
   }
   if (chemical) {
     sections.push({
       title: 'Chemical Treatment', emoji: '💊', color: '#2563eb', content: chemical,
       details: [
-        { label: 'Chemical Name', value: result.chemicalName },
-        { label: 'Active Ingredient', value: result.activeIngredient },
-        { label: 'Dosage', value: result.dosage },
-        { label: 'Mixing Method', value: result.mixingMethod },
-        { label: 'Spray Timing', value: result.sprayTiming },
-        { label: 'Waiting Period', value: result.waitingPeriod },
-        { label: 'Safety', value: result.safetyInstructions || result.precautions },
-      ],
+        { label: 'Chemical Name', value: text(result.chemicalName) },
+        { label: 'Active Ingredient', value: text(result.activeIngredient) },
+        { label: 'Dosage', value: text(result.dosage) },
+        { label: 'Mixing Method', value: text(result.mixingMethod) },
+        { label: 'Spray Timing', value: text(result.sprayTiming) },
+        { label: 'Waiting Period', value: text(result.waitingPeriod) },
+        { label: 'Safety', value: text(result.safetyInstructions ?? result.precautions) },
+      ].filter((d) => d.value),
     });
   }
   if (prevention) {
     sections.push({
       title: 'Preventive Measures', emoji: '🛡️', color: '#0d9488', content: prevention,
       details: [
-        { label: 'Before Disease', value: result.beforeDisease },
-        { label: 'During Disease', value: result.duringDisease },
-        { label: 'After Recovery', value: result.afterRecovery },
-      ],
+        { label: 'Before Disease', value: text(result.beforeDisease) },
+        { label: 'During Disease', value: text(result.duringDisease) },
+        { label: 'After Recovery', value: text(result.afterRecovery) },
+      ].filter((d) => d.value),
     });
   }
-  if (result.recommendedActions) {
-    sections.push({ title: 'Recommended Actions', emoji: '⚡', color: '#d97706', content: result.recommendedActions });
+  const recommendedActionsText = text(result.recommendedActions);
+  if (recommendedActionsText) {
+    sections.push({ title: 'Recommended Actions', emoji: '⚡', color: '#d97706', content: recommendedActionsText });
   }
-  if (result.governmentAdvisory) {
-    sections.push({ title: 'Government Advisory', emoji: '🏛️', color: '#4f46e5', content: result.governmentAdvisory });
+  const governmentAdvisoryText = text(result.governmentAdvisory);
+  if (governmentAdvisoryText) {
+    sections.push({ title: 'Government Advisory', emoji: '🏛️', color: '#4f46e5', content: governmentAdvisoryText });
   }
 
   return {
@@ -382,17 +396,17 @@ export function buildDiseaseReportData(
     confidence: result.confidenceScore,
     severity: result.severityLevel,
     summaryFields: [
-      { label: 'Farmer',   value: userName,             emoji: '👤' },
-      { label: 'Crop',     value: result.cropName,      emoji: '🌾' },
-      { label: 'Disease',  value: result.diseaseName,   emoji: '🦠' },
-      { label: 'Severity', value: result.severityLevel, emoji: '📊', color: sevColor },
+      { label: 'Farmer', value: userName ?? '—', emoji: '👤' },
+      { label: 'Crop', value: text(result.cropName), emoji: '🌾' },
+      { label: 'Disease', value: text(result.diseaseName), emoji: '🦠' },
+      { label: 'Severity', value: text(result.severityLevel), emoji: '📊', color: sevColor },
     ],
     metaFields: [
-      { label: 'Disease Type',    value: result.diseaseType },
-      { label: 'Scientific Name', value: result.scientificName },
-      { label: 'Confidence',      value: result.confidenceScore != null ? `${result.confidenceScore}%` : undefined },
-      { label: 'Affected Part',   value: result.affectedPlantPart },
-      { label: 'Report Date',     value: date },
+      { label: 'Disease Type', value: text(result.diseaseType) },
+      { label: 'Scientific Name', value: text(result.scientificName) },
+      { label: 'Confidence', value: result.confidenceScore != null ? `${result.confidenceScore}%` : undefined },
+      { label: 'Affected Part', value: text(result.affectedPlantPart) },
+      { label: 'Report Date', value: date },
     ],
     referenceImages: result.diseaseImages,
     sections,

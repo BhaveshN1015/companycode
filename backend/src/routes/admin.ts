@@ -1,6 +1,7 @@
 import express, { Response } from 'express';
 import { BlogPost } from '../models/BlogPost';
 import { GovtScheme } from '../models/GovtScheme';
+import { AgroudAnKisanCard } from '../models/AgroudAnKisanCard';
 import { User } from '../models/User';
 import { CropRecommendation } from '../models/CropRecommendation';
 import { MarketplaceListing } from '../models/Marketplace';
@@ -16,28 +17,30 @@ const publicUserFields = 'name email phone farmSize location soilType waterSourc
 
 router.get('/overview', async (_req: AuthenticatedRequest, res: Response) => {
   try {
-    const [
-      totalUsers,
-      totalAdmins,
-      totalRecommendations,
-      totalListings,
-      totalBlogPosts,
-      totalSchemes,
-      recentUsers,
-      recentRecommendations,
-      recentListings,
-    ] =
-      await Promise.all([
-        User.countDocuments(),
-        User.countDocuments({ role: 'admin' }),
-        CropRecommendation.countDocuments(),
-        MarketplaceListing.countDocuments(),
-        BlogPost.countDocuments(),
-        GovtScheme.countDocuments(),
-        User.find().select(publicUserFields).sort({ createdAt: -1 }).limit(5),
-        CropRecommendation.find().sort({ createdAt: -1 }).limit(5),
-        MarketplaceListing.find().sort({ createdAt: -1 }).limit(5),
-      ]);
+        const [
+          totalUsers,
+          totalAdmins,
+          totalRecommendations,
+          totalListings,
+          totalBlogPosts,
+          totalSchemes,
+          totalKisanCards,
+          recentUsers,
+          recentRecommendations,
+          recentListings,
+        ] =
+          await Promise.all([
+            User.countDocuments(),
+            User.countDocuments({ role: 'admin' }),
+            CropRecommendation.countDocuments(),
+            MarketplaceListing.countDocuments(),
+            BlogPost.countDocuments(),
+            GovtScheme.countDocuments(),
+            AgroudAnKisanCard.countDocuments(),
+            User.find().select(publicUserFields).sort({ createdAt: -1 }).limit(5),
+            CropRecommendation.find().sort({ createdAt: -1 }).limit(5),
+            MarketplaceListing.find().sort({ createdAt: -1 }).limit(5),
+          ]);
 
     res.json({
       success: true,
@@ -49,6 +52,7 @@ router.get('/overview', async (_req: AuthenticatedRequest, res: Response) => {
           marketplaceListings: totalListings,
           blogPosts: totalBlogPosts,
           govtSchemes: totalSchemes,
+          kisanCards: totalKisanCards,
         },
         recentUsers,
         recentRecommendations,
@@ -65,17 +69,42 @@ router.get('/users', async (req: AuthenticatedRequest, res: Response) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
     const skip = (page - 1) * limit;
-    const { search, role, verified } = req.query as Record<string, string>;
+    const { search, role, verified, card } = req.query as Record<string, string>;
 
     const filter: Record<string, any> = {};
-
-    if (search) {
-      const regex = new RegExp(search, 'i');
-      filter.$or = [{ name: regex }, { email: regex }, { phone: regex }];
+    const searchRegex = search ? new RegExp(search, 'i') : null;
+    if (searchRegex) {
+      filter.$or = [{ name: searchRegex }, { email: searchRegex }, { phone: searchRegex }];
     }
     if (role && ['farmer', 'vendor', 'admin'].includes(role)) filter.role = role;
     if (verified === 'true') filter.verified = true;
     if (verified === 'false') filter.verified = false;
+
+    // AgroudAn Kisan Cards (one per farmer) — used for the real card count, the
+    // per-user card-number column, card-number search and the card filter.
+    const allCards = await AgroudAnKisanCard.find({})
+      .select('userId cardNumber cardStatus')
+      .lean();
+    const cardByUser = new Map(allCards.map((c) => [String(c.userId), c]));
+
+    // Extend search to match AgroudAn Kisan Card numbers (existing search kept intact)
+    if (searchRegex) {
+      const matchedIds = allCards
+        .filter((c) => searchRegex.test(c.cardNumber || ''))
+        .map((c) => c.userId);
+      if (matchedIds.length) {
+        filter.$or = (filter.$or || []).concat({ _id: { $in: matchedIds } });
+      }
+    }
+
+    // AgroudAn Kisan Card filter: registered / not registered
+    if (card === 'registered') {
+      filter._id = { $in: allCards.map((c) => c.userId) };
+      filter.role = 'farmer';
+    } else if (card === 'not_registered') {
+      filter._id = { $nin: allCards.map((c) => c.userId) };
+      filter.role = 'farmer';
+    }
 
     const [users, total, totalFarmers, totalAdmins, totalVerified, totalActive] = await Promise.all([
       User.find(filter).select(publicUserFields).sort({ createdAt: -1 }).skip(skip).limit(limit),
@@ -86,11 +115,21 @@ router.get('/users', async (req: AuthenticatedRequest, res: Response) => {
       User.countDocuments({ isActive: true }),
     ]);
 
+    const data = users.map((u) => {
+      const obj = u.toObject();
+      const c = cardByUser.get(String(u._id));
+      return {
+        ...obj,
+        kisanCardNumber: c?.cardNumber ?? null,
+        kisanCardStatus: c?.cardStatus ?? null,
+      };
+    });
+
     res.json({
       success: true,
-      data: users,
+      data,
       pagination: { total, page, limit, pages: Math.ceil(total / limit) },
-      summary: { total: await User.countDocuments(), farmers: totalFarmers, admins: totalAdmins, verified: totalVerified, active: totalActive },
+      summary: { total: await User.countDocuments(), farmers: totalFarmers, admins: totalAdmins, verified: totalVerified, active: totalActive, cards: allCards.length },
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch users' });
@@ -435,6 +474,49 @@ router.delete('/crop-knowledge/:id', async (req: AuthenticatedRequest, res: Resp
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete crop' });
   }
+});
+
+// ─── Registered AgroudAn Kisan Cards (admin) ───────────────────────────────────
+// Returns only non-sensitive, explicitly-projected fields. Search by card number,
+// farmer name, state or district. Identity is the admin from JWT (no client id).
+router.get('/kisan-cards', async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const page = Math.max(1, parseInt(req.query.page as string) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
+        const skip = (page - 1) * limit;
+        const { search, state } = req.query as Record<string, string>;
+
+        const filter: Record<string, any> = {};
+        if (search) {
+            const regex = new RegExp(search, 'i');
+            filter.$or = [
+                { cardNumber: regex },
+                { fullName: regex },
+                { 'location.state': regex },
+                { 'location.district': regex },
+            ];
+        }
+        if (state) {
+            filter['location.state'] = new RegExp(state, 'i');
+        }
+
+        const projection =
+            'cardNumber cardStatus isComplete fullName location.state location.district location.tehsil location.village ' +
+            'agriculture.totalLandArea agriculture.landUnit agriculture.mainCrops createdAt';
+
+        const [cards, total] = await Promise.all([
+            AgroudAnKisanCard.find(filter).select(projection).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+            AgroudAnKisanCard.countDocuments(filter),
+        ]);
+
+        res.json({
+            success: true,
+            data: cards,
+            pagination: { total, page, limit, pages: Math.ceil(total / limit) },
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch Kisan Cards' });
+    }
 });
 
 export default router;

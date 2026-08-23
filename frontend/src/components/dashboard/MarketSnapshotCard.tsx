@@ -76,7 +76,7 @@ export default function MarketSnapshotCard({ onViewPrices }: { onViewPrices?: ()
   }
 
   return (
-    <div className="flex h-full flex-col justify-between">
+    <div className="flex h-full flex-col justify-between border-t-4 border-emerald-500">
       {/* Crop selector */}
       <div className="flex items-center gap-2">
         <FaChartLine className="text-rose-500" />
@@ -91,6 +91,9 @@ export default function MarketSnapshotCard({ onViewPrices }: { onViewPrices?: ()
           ))}
         </select>
       </div>
+      <p className="mt-1 text-xs text-slate-500">
+        आपके क्षेत्र के लिवड़ीमंडी भाव — आज की वहाँ-वहाँ कीमतें।
+      </p>
 
       {/* Price */}
       <div className="text-center">
@@ -119,7 +122,7 @@ export default function MarketSnapshotCard({ onViewPrices }: { onViewPrices?: ()
         onClick={onViewPrices}
         className="w-full -mx-4 flex items-center justify-between gap-2 border-t border-emerald-600 px-4 py-2 text-sm font-medium text-emerald-600 rounded-b-2xl"
       >
-        <span>View prices</span>
+        <span>भाव देखें</span>
         <span className="text-slate-400">›</span>
       </button>
     </div>

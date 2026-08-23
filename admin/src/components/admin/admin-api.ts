@@ -1,4 +1,5 @@
-import type { Overview, AdminUser, Recommendation, Listing, SessionUser, GovtScheme, GalleryItem, UserSummary, UserPagination, CropKnowledge, CropKnowledgeSummary, DiseaseRecord, DiseaseKnowledgeSummary, PestRecord, PestKnowledgeSummary, FarmerStory, FarmerStorySummary, BlogPost, DPKRecord, DPKListResponse, SchemeApplication, SchemeApplicationListResponse, KVKRecord, KVKListResponse, DictionaryEntry, DictionaryListResponse, ReviewQueueResponse, DKRecord, DKListResponse } from './admin-types';
+import type { Overview, AdminUser, Recommendation, Listing, SessionUser, GovtScheme, GalleryItem, UserSummary, UserPagination, CropKnowledge, CropKnowledgeSummary, DiseaseRecord, DiseaseKnowledgeSummary, PestRecord, PestKnowledgeSummary, FarmerStory, FarmerStorySummary, BlogPost, DPKRecord, DPKListResponse, SchemeApplication, SchemeApplicationListResponse, KVKRecord, KVKListResponse,   DictionaryEntry, DictionaryListResponse, ReviewQueueResponse, DKRecord, DKListResponse, KisanCardsResponse, AdminFarmerCardDetail
+} from './admin-types';
 
 // In development the Next.js rewrite proxy forwards /api/* → http://localhost:4000/api/*
 // In production NEXT_PUBLIC_API_URL points to the live backend.
@@ -70,7 +71,7 @@ export type UsersResponse = {
 
 export const fetchAdminUsers = async (
   token: string,
-  params: { page?: number; limit?: number; search?: string; role?: string; verified?: string } = {}
+  params: { page?: number; limit?: number; search?: string; role?: string; verified?: string; card?: string } = {}
 ) => {
   const query = new URLSearchParams();
   if (params.page) query.set('page', String(params.page));
@@ -78,8 +79,48 @@ export const fetchAdminUsers = async (
   if (params.search) query.set('search', params.search);
   if (params.role) query.set('role', params.role);
   if (params.verified !== undefined) query.set('verified', params.verified);
+  if (params.card) query.set('card', params.card);
   const qs = query.toString();
   return requestJson<UsersResponse>(`/admin/users${qs ? '?' + qs : ''}`, token);
+};
+
+export type AdminCardUpdatePayload = {
+  fullName?: string;
+  fatherName?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  location?: Partial<{
+    country: string; state: string; district: string; tehsil: string; village: string; pincode: string;
+    coordinates: { latitude: number; longitude: number };
+  }>;
+  agriculture?: Partial<{
+    totalLandArea: number; landUnit: string; farmingCategory: string; mainCrops: string[]; annualIncomeRange: string;
+  }>;
+  cardStatus?: 'active' | 'pending' | 'suspended';
+};
+
+// GET a specific farmer's AgroudAn Kisan Card (admin only)
+export const fetchAdminUserCard = (token: string, userId: string) =>
+  requestJson<{ success: boolean; data: AdminFarmerCardDetail }>(`/kisan-card/admin/user/${userId}`, token);
+
+// PUT / admin update allowed farmer card fields (cardNumber is never modified)
+export const updateAdminUserCard = (token: string, userId: string, data: AdminCardUpdatePayload) =>
+  requestJson<{ success: boolean; data: AdminFarmerCardDetail }>(`/kisan-card/admin/user/${userId}`, token, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+
+export const fetchAdminKisanCards = (
+  token: string,
+  params: { page?: number; limit?: number; search?: string; state?: string } = {}
+) => {
+  const query = new URLSearchParams();
+  if (params.page) query.set('page', String(params.page));
+  if (params.limit) query.set('limit', String(params.limit));
+  if (params.search) query.set('search', params.search);
+  if (params.state) query.set('state', params.state);
+  const qs = query.toString();
+  return requestJson<KisanCardsResponse>(`/admin/kisan-cards${qs ? '?' + qs : ''}`, token);
 };
 
 export const loadAdminWorkspace = async (authToken: string) => {

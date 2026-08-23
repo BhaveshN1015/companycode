@@ -9,14 +9,14 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import FarmerFooter from '@/components/FarmerFooter';
 import FarmerSidebar from '@/components/FarmerSidebar';
+import DashboardKisanCard from '@/components/dashboard/DashboardKisanCard';
 import AiFarmSection from '@/components/AiFarmSection';
 import SuccessStoriesSection from '@/components/SuccessStoriesSection';
 import MarketSnapshotCard from '@/components/dashboard/MarketSnapshotCard';
 import LocationModal from '@/components/LocationModal';
-import FarmerProfileModal from '@/components/farmer/FarmerProfileModal';
 import {
     FaBell, FaMapMarkerAlt, FaMicrophone, FaCloudSun, FaTint,
-    FaMicroscope, FaArrowRight, FaWind, FaLeaf, FaSpinner, FaGavel,
+    FaMicroscope, FaArrowRight, FaWind, FaLeaf, FaSpinner, FaHandsHelping, FaFlask,
 } from 'react-icons/fa';
 import { lazy, Suspense } from 'react';
 
@@ -33,7 +33,6 @@ export default function FarmerDashboard() {
     const router = useRouter();
 
     const [locationModalOpen, setLocationModalOpen] = useState(false);
-    const [profileModalOpen, setProfileModalOpen] = useState(false);
 
     const [weather, setWeather] = useState<any>(null);
     const [weatherLoading, setWeatherLoading] = useState(false);
@@ -159,7 +158,7 @@ export default function FarmerDashboard() {
     return (
         <>
             <div className="flex min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-                <FarmerSidebar open={true} onClose={() => undefined} onProfileClick={() => setProfileModalOpen(true)} />
+                <FarmerSidebar open={true} onClose={() => undefined} onProfileClick={() => router.push('/dashboard/farmer/profile')} />
 
                 <div className="flex-1 flex flex-col">
                     {/* ── Header ── */}
@@ -219,6 +218,7 @@ export default function FarmerDashboard() {
                     )}
 
                     <main className="flex-1 p-6">
+                        <DashboardKisanCard />
                         <section className="mb-6">
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
@@ -229,13 +229,16 @@ export default function FarmerDashboard() {
                                         setModalContent({ title: 'Weather Details', body: <pre className="text-xs whitespace-pre-wrap">{JSON.stringify(currentWeather, null, 2)}</pre> });
                                         setModalOpen(true);
                                     }}
-                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-gradient-to-br from-sky-50 via-cyan-50 to-amber-50 p-4 shadow-sm hover:shadow-md transition overflow-hidden"
+                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-gradient-to-br from-sky-50 via-cyan-50 to-amber-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition overflow-hidden"
                                 >
                                     <div className="flex h-full flex-col justify-between">
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Weather Today</div>
                                             <div className="rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-sky-700 shadow-sm backdrop-blur">Live</div>
                                         </div>
+                                        <p className="mt-1 text-xs text-slate-500">
+                                            आज का मौसम — temperature, humidity &amp; wind speed for your farm.
+                                        </p>
 
                                         <div className="relative mt-3 flex flex-1 items-center justify-center rounded-3xl bg-white/55 px-4 py-4 shadow-inner backdrop-blur-sm">
                                             <div className="absolute -left-5 top-3 h-20 w-20 rounded-full bg-sky-300/30 blur-2xl" />
@@ -271,7 +274,7 @@ export default function FarmerDashboard() {
 
                                         <div className="w-full mt-3">
                                             <button className="w-full -mx-4 flex items-center justify-between gap-2 border-t border-emerald-600 px-4 py-2 text-sm font-medium text-emerald-600 rounded-b-2xl">
-                                                <span>View forecast</span>
+                                                <span>वातानुकूलन देखें</span>
                                                 <FaArrowRight className="text-slate-400" />
                                             </button>
                                         </div>
@@ -279,7 +282,7 @@ export default function FarmerDashboard() {
                                 </div>
 
                                 {/* ── Soil Moisture Card ── */}
-                                <div className="cursor-pointer h-[17.58rem] rounded-2xl bg-cyan-50 p-4 shadow-sm hover:shadow-md transition">
+                                <div className="cursor-pointer h-[17.58rem] rounded-2xl bg-cyan-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition">
                                     <div className="flex h-full flex-col justify-between">
                                         <div className="flex items-center gap-3 rounded-2xl bg-cyan-100 px-4 py-3 shadow-sm w-full">
                                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-200 text-cyan-700 flex-shrink-0">
@@ -287,6 +290,9 @@ export default function FarmerDashboard() {
                                             </div>
                                             <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Soil Moisture</div>
                                         </div>
+                                        <p className="mt-2 text-xs text-slate-500">
+                                            मिट्टी की गीलापन की स्थिति — live %, status &amp; location-wise readings.
+                                        </p>
 
                                         <div className="flex flex-1 flex-col items-center justify-center text-center gap-2 mt-2">
                                             {moistureLoading && <div className="text-sm text-slate-400">Fetching live data…</div>}
@@ -336,7 +342,7 @@ export default function FarmerDashboard() {
                                                 onClick={(e) => { e.stopPropagation(); moisture ? showMoistureModal() : loadMoisture(); }}
                                                 className="w-full -mx-4 flex items-center justify-between gap-2 border-t border-emerald-600 px-4 py-2 text-sm font-medium text-emerald-600 rounded-b-2xl"
                                             >
-                                                <span>{moisture ? 'Details' : 'Refresh'}</span>
+                                                <span>{moisture ? 'मिट्टी का विवरण' : 'रीफ्रेश'}</span>
                                                 <FaArrowRight className="text-slate-400" />
                                             </button>
                                         </div>
@@ -346,7 +352,7 @@ export default function FarmerDashboard() {
                                 {/* ── AI Crop Advisor Card ── */}
                                 <div
                                     onClick={() => router.push('/crop-recommendation')}
-                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-emerald-50 p-4 shadow-sm hover:shadow-md transition overflow-hidden"
+                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-emerald-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition overflow-hidden"
                                 >
                                     <div className="flex h-full flex-col justify-between">
                                         <div className="flex items-center justify-between">
@@ -362,7 +368,7 @@ export default function FarmerDashboard() {
                                                 <p className="text-xs text-emerald-600 font-medium">📍 {location.district}, {location.state}</p>
                                             )}
                                             <p className="text-xs text-slate-500 leading-relaxed">
-                                                Get AI-powered recommendations based on your soil, season, water &amp; budget.
+                                                मिट्टी, मौसम, पानी और बजट के हिसाब से AI सिफ़ारिश़ें — अपनी फसल चुनें।
                                             </p>
                                             <div className="flex flex-wrap gap-1 mt-1">
                                                 {['Wheat', 'Rice', 'Maize', 'Cotton'].map((c) => (
@@ -372,7 +378,7 @@ export default function FarmerDashboard() {
                                         </div>
                                         <div className="w-full mt-auto">
                                             <button className="w-full -mx-4 flex items-center justify-between gap-2 text-sm font-medium text-emerald-600 border-t border-emerald-600 px-4 py-2 rounded-b-2xl">
-                                                <span>Get Recommendations</span>
+                                                <span>सिफ़ारिश़ें पाएं</span>
                                                 <FaArrowRight className="text-slate-400" />
                                             </button>
                                         </div>
@@ -380,14 +386,14 @@ export default function FarmerDashboard() {
                                 </div>
 
                                 {/* ── Market Price Card ── */}
-                                <div className="cursor-pointer h-[17.58rem] rounded-2xl bg-rose-50 p-4 shadow-sm hover:shadow-md transition overflow-hidden">
+                                <div className="cursor-pointer h-[17.58rem] rounded-2xl bg-rose-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition overflow-hidden">
                                     <MarketSnapshotCard onViewPrices={() => router.push('/dashboard/farmer/market')} />
                                 </div>
 
                                 {/* ── Disease Scan Card ── */}
                                 <div
                                     onClick={() => router.push('/disease-detection')}
-                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-violet-50 p-4 shadow-sm hover:shadow-md transition"
+                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-violet-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition"
                                 >
                                     <div className="flex items-center gap-3 flex-col h-full justify-between">
                                         <div className="flex items-center gap-3">
@@ -399,9 +405,12 @@ export default function FarmerDashboard() {
                                                 <div className="text-lg font-bold text-slate-800">No alerts</div>
                                             </div>
                                         </div>
+                                        <p className="mt-2 text-xs text-slate-500">
+                                            फसल की बीमारियों की जाँच करें और समय रहकर उपचार करें।
+                                        </p>
                                         <div className="w-full mt-auto">
                                             <button className="w-full -mx-4 flex items-center justify-between gap-2 text-sm font-medium text-emerald-600 border-t border-emerald-600 px-4 py-2 rounded-b-2xl">
-                                                <span>Go now</span>
+                                                <span>स्कैन शुरू करें</span>
                                                 <FaArrowRight className="text-slate-400" />
                                             </button>
                                         </div>
@@ -411,22 +420,51 @@ export default function FarmerDashboard() {
                                 {/* ── Government Schemes Card ── */}
                                 <div
                                     onClick={() => router.push('/schemes')}
-                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-amber-50 p-4 shadow-sm hover:shadow-md transition"
+                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-amber-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition"
                                 >
                                     <div className="flex flex-col h-full justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="h-12 w-12 rounded-xl bg-amber-200 text-amber-700 flex items-center justify-center flex-shrink-0">
-                                                <FaGavel className="text-2xl" />
+                                                <FaHandsHelping className="text-2xl" />
                                             </div>
                                             <div>
                                                 <div className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Govt Schemes</div>
                                                 <div className="text-base font-bold text-slate-800">Central &amp; State</div>
                                             </div>
                                         </div>
-                                        <p className="text-xs text-slate-500 leading-relaxed">Subsidies, loans, insurance &amp; welfare programs for farmers.</p>
+                                        <p className="text-xs text-slate-500 leading-relaxed">
+                                            सरकारी सब्सिडी, ऋण, बीमा और कल्याण योजनाएँ — आपके लिए प्रासंगिक।<br />Subsidies, loans, insurance &amp; welfare programs for farmers.
+                                        </p>
                                         <div className="w-full mt-auto">
                                             <button className="w-full -mx-4 flex items-center justify-between gap-2 text-sm font-medium text-emerald-600 border-t border-emerald-600 px-4 py-2 rounded-b-2xl">
-                                                <span>Browse schemes</span>
+                                                <span>योजनाएँ देखें</span>
+                                                <FaArrowRight className="text-slate-400" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ── Fertilizer Calculator Card ── */}
+                                <div
+                                    onClick={() => router.push('/dashboard/farmer/fertilizer-calculator')}
+                                    className="cursor-pointer h-[17.58rem] rounded-2xl bg-lime-50 p-4 shadow-sm hover:shadow-md border-t-4 border-emerald-500 transition"
+                                >
+                                    <div className="flex flex-col h-full justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-12 w-12 rounded-xl bg-lime-200 text-lime-700 flex items-center justify-center flex-shrink-0">
+                                                <FaFlask className="text-2xl" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Fertilizer Calculator</div>
+                                                <div className="text-base font-bold text-slate-800">NPK &amp; खाद गणना</div>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-slate-500 leading-relaxed">
+                                            अपनी फसल और मिट्टी के अनुसार सही खाद की मात्रा जानें।<br />Organic + chemical fertilizer recommendation.
+                                        </p>
+                                        <div className="w-full mt-auto">
+                                            <button className="w-full -mx-4 flex items-center justify-between gap-2 text-sm font-medium text-emerald-600 border-t border-emerald-600 px-4 py-2 rounded-b-2xl">
+                                                <span>खाद की गणना करें</span>
                                                 <FaArrowRight className="text-slate-400" />
                                             </button>
                                         </div>
@@ -472,10 +510,7 @@ export default function FarmerDashboard() {
             </div>
 
             {/* Global Location Modal */}
-            <LocationModal open={locationModalOpen} onClose={() => setLocationModalOpen(false)} />
-
-            {/* Farmer Profile Modal */}
-            <FarmerProfileModal open={profileModalOpen} onClose={() => setProfileModalOpen(false)} />
-        </>
+                <LocationModal open={locationModalOpen} onClose={() => setLocationModalOpen(false)} />
+            </>
     );
 }

@@ -42,6 +42,7 @@ const INTENT_TO_AGENTS: Record<IntentType, AgentName[]> = {
   disease:       ['DiseaseAgent'],
   crop:          ['CropAgent'],
   soil:          ['SoilAgent', 'FertilizerAgent'],
+  fertilizer:    ['FertilizerAgent'],
   weather:       ['WeatherAgent'],
   market:        ['MarketAgent'],
   government:    ['GovernmentAgent'],
@@ -64,7 +65,7 @@ function detectSecondaryAgents(intent: IntentType, ctx: AgentContext): AgentName
 
   if (entities) {
     if (entities.crop && (intent === 'general' || intent === 'crop')) agents.push('SeedAgent');
-    if (entities.fertilizer || intent === 'soil' || intent === 'crop') agents.push('FertilizerAgent');
+    if (entities.fertilizer || intent === 'soil' || intent === 'crop' || intent === 'fertilizer') agents.push('FertilizerAgent');
     if (shared?.activeCrops?.length || ctx.pageData?.farmDiaryData) agents.push('FarmDiaryAgent');
   }
 

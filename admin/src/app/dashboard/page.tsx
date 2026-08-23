@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaDatabase, FaLeaf, FaRobot, FaUsers, FaWarehouse, FaPhotoVideo, FaStore, FaCheckCircle, FaClock, FaTimesCircle } from 'react-icons/fa';
+import { FaDatabase, FaLeaf, FaRobot, FaUsers, FaWarehouse, FaPhotoVideo, FaStore, FaCheckCircle, FaClock, FaTimesCircle, FaIdCard } from 'react-icons/fa';
 import { useAdmin } from '@/components/admin/AdminProvider';
 import { StatCard } from '@/components/admin/AdminUi';
 
@@ -28,8 +28,9 @@ export default function AdminDashboardPage() {
     { href: '/registered-shops', title: 'Total Shops', value: shopStats.total ?? 0, icon: FaStore, accent: 'from-amber-500 to-orange-500' },
     { href: '/shopkeeper-verification', title: 'Pending Verification', value: shopStats.pending ?? 0, icon: FaClock, accent: 'from-yellow-500 to-amber-500' },
     { href: '/registered-shops', title: 'Verified Shops', value: shopStats.verified ?? 0, icon: FaCheckCircle, accent: 'from-green-500 to-emerald-500' },
-    { href: '/registered-shops', title: 'Total Products', value: shopStats.totalProducts ?? 0, icon: FaLeaf, accent: 'from-sky-500 to-cyan-500' },
-  ] as const;
+     { href: '/registered-shops', title: 'Total Products', value: shopStats.totalProducts ?? 0, icon: FaLeaf, accent: 'from-sky-500 to-cyan-500' },
+     { href: '/kisan-cards', title: 'Kisan Cards', value: overview?.totals?.kisanCards ?? 0, icon: FaIdCard, accent: 'from-green-500 to-emerald-500' },
+   ] as const;
 
   return (
     <div className="space-y-6">

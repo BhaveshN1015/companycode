@@ -6,6 +6,7 @@ import { useAddress } from '@/hooks/useAddress';
 
 import ProfileHeader from './profile/ProfileHeader';
 import CompletionCard from './profile/CompletionCard';
+import KisanCardSection from './profile/KisanCardSection';
 import BasicInfoCard from './profile/BasicInfoCard';
 import LocationCard from './profile/LocationCard';
 import AddressPicker from '@/components/kvk/AddressPicker';
@@ -69,6 +70,8 @@ export default function FarmerProfilePage() {
         />
 
         <CompletionCard profile={profile} />
+
+        <KisanCardSection />
 
         <LocationCard
           address={address}

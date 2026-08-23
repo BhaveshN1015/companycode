@@ -2,6 +2,7 @@ import express, { Response } from 'express';
 import { AuthenticatedRequest, authenticate } from '../middleware/auth';
 import { SoilReport } from '../models/SoilReport';
 import { calculateFertilizer, SUPPORTED_CROPS, AREA_UNITS, FertilizerCalcInput } from '../services/fertilizerCalculatorService';
+import { getFertilizerAIRecommendation } from '../services/fertilizerAI';
 
 const router = express.Router();
 
@@ -11,15 +12,16 @@ router.get('/meta', (_req, res: Response) => {
 });
 
 // POST /api/fertilizer-calculator/calculate
-// Body: { crop, areaValue, areaUnit, soilReportId? }
-// If soilReportId provided → auto-loads soil nutrients from DB
+// Body: { crop, areaValue, areaUnit, method, soilReportId? }
 router.post('/calculate', authenticate, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { crop, areaValue, areaUnit, soilReportId } = req.body;
+    const { crop, areaValue, areaUnit, method, soilReportId } = req.body;
 
     if (!crop || !areaValue || !areaUnit) {
       return res.status(400).json({ error: 'crop, areaValue, and areaUnit are required' });
     }
+
+    const calcMethod = method === 'crop' ? 'crop' : 'soil';
 
     const area = parseFloat(areaValue);
     if (isNaN(area) || area <= 0) {
@@ -27,8 +29,10 @@ router.post('/calculate', authenticate, async (req: AuthenticatedRequest, res: R
     }
 
     let soil: FertilizerCalcInput['soil'] | undefined;
+    let soilType: string | undefined;
+    let soilPH: number | undefined;
 
-    if (soilReportId) {
+    if (calcMethod === 'soil' && soilReportId) {
       const report = await SoilReport.findById(soilReportId).lean();
       if (report && report.farmerId.toString() === req.user!.userId) {
         soil = {
@@ -38,27 +42,32 @@ router.post('/calculate', authenticate, async (req: AuthenticatedRequest, res: R
           organicCarbon: report.organicCarbon,
           pH: report.pH,
         };
+        soilType = report.soilType;
+        soilPH = report.pH;
       }
-    } else {
-      // Try latest soil report automatically
-      const latest = await SoilReport.findOne({ farmerId: req.user!.userId })
-        .sort({ createdAt: -1 })
-        .select('nitrogen phosphorus potassium organicCarbon pH')
-        .lean();
-      if (latest) {
-        soil = {
-          nitrogen: latest.nitrogen,
-          phosphorus: latest.phosphorus,
-          potassium: latest.potassium,
-          organicCarbon: latest.organicCarbon,
-          pH: latest.pH,
-        };
-      }
+    } else if (calcMethod === 'soil' && !soilReportId) {
+      return res.json({
+        success: true,
+        data: calculateFertilizer({ crop, areaValue: area, areaUnit, method: 'crop' }),
+      });
     }
 
-    const result = calculateFertilizer({ crop, areaValue: area, areaUnit, soil });
+    const calculation = calculateFertilizer({ crop, areaValue: area, areaUnit, method: calcMethod, soil });
 
-    return res.json({ success: true, data: result });
+    // Get AI recommendation (async, non-blocking for response)
+    const aiRecommendation = await getFertilizerAIRecommendation({
+      calculation,
+      soilType,
+      soilPH,
+      organicCarbon: soil?.organicCarbon,
+      ec: soil?.ec,
+    });
+
+    return res.json({
+      success: true,
+      data: calculation,
+      ai: aiRecommendation,
+    });
   } catch (err: any) {
     console.error('Fertilizer calculator error:', err);
     res.status(500).json({ error: err.message || 'Calculation failed' });

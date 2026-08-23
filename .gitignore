@@ -7,3 +7,13 @@ backend/.env
 *.pyc
 *.log
 **/logs/
+
+# Python virtual environments
+**/.venv/
+**/.venv312/
+**/venv/
+
+
+
+# Raw voice datasets
+Ai/voice_dataset/*/raw/

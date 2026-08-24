@@ -49,7 +49,7 @@ export default function ShopkeeperLayout({ children }: { children: React.ReactNo
     }
   };
 
-  const handleTypeSelected = (shopType: 'fertilizer' | 'nursery') => {
+  const handleTypeSelected = (shopType: 'fertilizer' | 'nursery' | 'organic') => {
     setShowTypeModal(false);
     router.push('/dashboard/shopkeeper/complete-profile');
   };

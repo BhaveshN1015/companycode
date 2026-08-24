@@ -121,15 +121,16 @@ const sendOtpEmail = async (email: string, code: string) => {
 
 router.post('/register/request-otp', async (req: Request, res: Response) => {
   try {
-    let { email } = req.body;
+    let { email, role } = req.body;
 
     if (typeof email !== 'string' || !email.trim()) {
       return res.status(400).json({ error: 'Email is required' });
     }
 
     email = email.trim().toLowerCase();
+    const normalizedRole = normalizeRole(role);
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email, role: normalizedRole });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
     }
@@ -229,11 +230,13 @@ router.post('/register', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Shop name is required for shopkeeper registration' });
     }
 
-    if (!isGoogleAuth && !hasVerifiedEmail(email)) {
+    const verified = hasVerifiedEmail(email);
+    log.info('registration attempt', { email, role: normalizedRole, verified, isGoogleAuth });
+    if (!isGoogleAuth && !verified) {
       return res.status(400).json({ error: 'Please verify your email with OTP before registering' });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email, role: normalizedRole });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
     }
@@ -269,18 +272,20 @@ router.post('/register', async (req: Request, res: Response) => {
       token,
       user: safeUser(user),
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Registration failed' });
+  } catch (error: any) {
+    log.error('registration failed', { error: error?.message, stack: error?.stack, body: req.body });
+    res.status(500).json({ error: error?.message || 'Registration failed' });
   }
 });
 
 router.post('/login', async (req: Request, res: Response) => {
   try {
-    let { email, password } = req.body;
+    let { email, password, role } = req.body;
 
     if (typeof email === 'string') email = email.trim().toLowerCase();
 
-    const user = await User.findOne({ email });
+    const normalizedRole = normalizeRole(role);
+    const user = await User.findOne({ email, role: normalizedRole });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }

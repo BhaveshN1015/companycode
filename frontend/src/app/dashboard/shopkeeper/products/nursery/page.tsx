@@ -11,7 +11,7 @@ import { Plus, Search, Edit, Trash2, Package } from 'lucide-react';
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api').replace('/api', '');
 
 export default function NurseryProductsPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,9 +19,10 @@ export default function NurseryProductsPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isLoading) return;
     if (!isAuthenticated) { router.replace('/auth/login'); return; }
     load();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   const load = async () => {
     setLoading(true);

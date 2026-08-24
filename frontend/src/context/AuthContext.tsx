@@ -22,7 +22,7 @@ interface AuthContextType {
     role: UserRole | null;
     isLoading: boolean;
     isAuthenticated: boolean;
-    requestEmailOtp: (email: string) => Promise<{ delivered?: boolean; devOtp?: string }>;
+    requestEmailOtp: (email: string, role?: UserRole) => Promise<{ delivered?: boolean; devOtp?: string }>;
     verifyEmailOtp: (email: string, otp: string) => Promise<void>;
     login: (email: string, password: string, preferredRole?: UserRole) => Promise<User>;
     register: (userData: RegisterData, preferredRole?: UserRole) => Promise<User>;
@@ -155,11 +155,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const apiBase = '/api';
 
     // OTP and API calls use their own local loading — never touch sessionLoading
-    const requestEmailOtp = async (email: string) => {
+    const requestEmailOtp = async (email: string, role?: UserRole) => {
         const res = await fetch(`${apiBase}/auth/register/request-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email, role: role ? toBackendRole(role) : undefined }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
@@ -221,12 +221,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch(`${apiBase}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, role: preferredRole ? toBackendRole(preferredRole) : undefined }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(data.error || 'Login failed');
 
-        const normalizedRole = normalizeRole(preferredRole || data.user?.role);
+        const normalizedRole = normalizeRole(data.user?.role || preferredRole);
         const loggedUser: User = {
             id: data.user?.id || data.user?._id || Date.now().toString(),
             email: data.user?.email,

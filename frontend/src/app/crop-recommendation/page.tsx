@@ -17,7 +17,7 @@ import { useVoiceGuide } from '@/hooks/useVoiceGuide';
 type Step = 'form' | 'results';
 
 function CropRecommendationContent() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [step, setStep] = useState<Step>('form');
@@ -44,6 +44,7 @@ function CropRecommendationContent() {
 
   // Load farmer profile to get GPS coords and village/tehsil
   useEffect(() => {
+    if (isLoading) return;
     if (!isAuthenticated) return;
     const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
     if (!token) return;
@@ -58,7 +59,7 @@ function CropRecommendationContent() {
         if (profile.ext?.tehsil) setFarmerTehsil(profile.ext.tehsil);
       })
       .catch(() => {});
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   useEffect(() => {
     if (!searchParams) return;

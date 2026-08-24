@@ -32,13 +32,15 @@ export default function ShopkeeperDashboard() {
       const profileData = await shopkeeperApi.getProfile();
       if (profileData.profile) setProfile(profileData.profile);
       const shopType = profileData.profile?.shopType;
-      const [fertData, nurseryData] = await Promise.all([
+      const [fertData, nurseryData, organicData] = await Promise.all([
         shopType === 'fertilizer' ? shopkeeperApi.getFertilizerProducts().catch(() => ({ products: [] })) : Promise.resolve({ products: [] }),
         shopType === 'nursery' ? shopkeeperApi.getNurseryProducts().catch(() => ({ products: [] })) : Promise.resolve({ products: [] }),
+        shopType === 'organic' ? shopkeeperApi.getOrganicProducts().catch(() => ({ products: [] })) : Promise.resolve({ products: [] }),
       ]);
       const allProducts = [
         ...(fertData.products || []).map((p: any) => ({ ...p, _productType: 'fertilizer', displayName: p.productName, displayPrice: `₹${p.sellingPrice}` })),
         ...(nurseryData.products || []).map((p: any) => ({ ...p, _productType: 'nursery', displayName: p.plantName, displayPrice: `₹${p.price}` })),
+        ...(organicData.products || []).map((p: any) => ({ ...p, _productType: 'organic', displayName: p.productName, displayPrice: `₹${p.sellingPrice}` })),
       ];
       setProducts(allProducts);
     } catch {}
@@ -52,8 +54,10 @@ export default function ShopkeeperDashboard() {
   const firstName = user?.name?.split(' ')[0] || 'there';
 
   const verificationStatus = profile?.verificationStatus;
-  const isFertilizer = profile?.shopType === 'fertilizer';
-  const productRoute = isFertilizer ? '/dashboard/shopkeeper/products/fertilizer' : '/dashboard/shopkeeper/products/nursery';
+  const shopType = profile?.shopType;
+  const isFertilizer = shopType === 'fertilizer';
+  const isOrganic = shopType === 'organic';
+  const productRoute = isFertilizer ? '/dashboard/shopkeeper/products/fertilizer' : isOrganic ? '/dashboard/shopkeeper/products/organic' : '/dashboard/shopkeeper/products/nursery';
 
   const VerificationBanner = () => {
     if (!profile) return null;

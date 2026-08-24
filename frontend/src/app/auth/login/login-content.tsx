@@ -16,6 +16,8 @@ export default function LoginContent() {
   const searchParams = useSearchParams();
   const roleParam: UserRole = searchParams?.get('role') === 'shopkeeper' ? 'shopkeeper' : 'farmer';
 
+  const isShopkeeper = roleParam === 'shopkeeper';
+
   const { login, requestCardOtp, loginWithCardOtp } = useAuth();
   const voiceGuide = useVoiceGuide('login');
 
@@ -117,27 +119,29 @@ export default function LoginContent() {
           </div>
         </div>
 
-        {/* Mode toggle */}
-        <div className="flex items-center gap-1 mb-5 p-1 bg-slate-50 rounded-xl">
-          <button
-            type="button"
-            onClick={() => { setMode('password'); setError(''); setSuccess(''); }}
-            className={`flex-1 text-center py-1.5 text-sm font-semibold rounded-lg transition ${
-              mode === 'password' ? 'bg-white shadow text-emerald-700' : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            Email & Password
-          </button>
-          <button
-            type="button"
-            onClick={() => { setMode('card'); setError(''); setSuccess(''); setOtpSent(false); setDevOtp(''); }}
-            className={`flex-1 text-center py-1.5 text-sm font-semibold rounded-lg transition ${
-              mode === 'card' ? 'bg-white shadow text-emerald-700' : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            Kisan Card + OTP
-          </button>
-        </div>
+         {/* Mode toggle */}
+         <div className="flex items-center gap-1 mb-5 p-1 bg-slate-50 rounded-xl">
+           <button
+             type="button"
+             onClick={() => { setMode('password'); setError(''); setSuccess(''); }}
+             className={`flex-1 text-center py-1.5 text-sm font-semibold rounded-lg transition ${
+               mode === 'password' ? 'bg-white shadow text-emerald-700' : 'text-slate-500 hover:text-slate-700'
+             }`}
+           >
+             Email &amp; Password
+           </button>
+           {!isShopkeeper && (
+             <button
+               type="button"
+               onClick={() => { setMode('card'); setError(''); setSuccess(''); setOtpSent(false); setDevOtp(''); }}
+               className={`flex-1 text-center py-1.5 text-sm font-semibold rounded-lg transition ${
+                 mode === 'card' ? 'bg-white shadow text-emerald-700' : 'text-slate-500 hover:text-slate-700'
+               }`}
+             >
+               Kisan Card + OTP
+             </button>
+           )}
+         </div>
 
         {/* Alerts */}
         {error && <div className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</div>}

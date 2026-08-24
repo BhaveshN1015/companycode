@@ -52,7 +52,7 @@ export default function RegisterContent() {
     if (!email.trim()) { setError('Please enter your email first'); return; }
     setSendingOtp(true); setError(''); setSuccess('');
     try {
-      const data = await requestEmailOtp(email.trim());
+      const data = await requestEmailOtp(email.trim(), roleParam);
       setOtpSent(true); setOtpVerified(false);
       setSuccess('OTP sent! Check your email.');
       setDevOtp(data?.devOtp || '');

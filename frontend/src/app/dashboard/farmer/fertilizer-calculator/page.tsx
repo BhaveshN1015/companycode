@@ -19,6 +19,8 @@ import {
   type FertilizerAIResponse,
 } from '@/services/fertilizerCalculator';
 import { uploadSoilReport } from '@/services/soilHealth';
+import { shopkeeperApi } from '@/services/shopkeeperApi';
+import { ShopRecommendationList, type ShopMatch } from '@/components/shopkeeper/ShopRecommendationCard';
 import {
   FaArrowLeft, FaCheck, FaFlask, FaLeaf, FaSeedling,
   FaUpload, FaCamera, FaTimes, FaSpinner, FaInfoCircle,
@@ -168,7 +170,7 @@ function parseVoiceInput(text: string, crops: CropMeta[]): VoiceParseResult {
 }
 
 export default function FertilizerCalculatorPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -196,6 +198,8 @@ export default function FertilizerCalculatorPage() {
   const [metaLoading, setMetaLoading] = useState(true);
   const [appLanguage, setAppLanguage] = useState('hi');
   const [showDetailedView, setShowDetailedView] = useState(false);
+  const [shopRecommendations, setShopRecommendations] = useState<ShopMatch[]>([]);
+  const [shopsLoading, setShopsLoading] = useState(false);
 
   const recognitionRef = useRef<any>(null);
 
@@ -207,11 +211,12 @@ export default function FertilizerCalculatorPage() {
   });
 
   useEffect(() => {
+    if (isLoading) return;
     if (!isAuthenticated) { router.replace('/auth/login'); return; }
     loadMeta();
     const storedLang = localStorage.getItem('appLanguage') || 'hi';
     setAppLanguage(storedLang);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   const loadMeta = async () => {
     try {
@@ -362,10 +367,48 @@ export default function FertilizerCalculatorPage() {
       const res = await calculateFertilizer(payload);
       setResult(res.calculation);
       setAiRecommendation(res.ai);
+      fetchShopRecommendations(res.calculation);
     } catch (err: any) {
       setError(err.message || 'गणना विफल रही');
     } finally {
       setCalculating(false);
+    }
+  };
+
+  const fetchShopRecommendations = async (calculation: FertilizerResult) => {
+    setShopsLoading(true);
+    setShopRecommendations([]);
+    try {
+      const requirements: Array<{ productName: string; category: string; quantity?: number; unit?: string }> = [];
+
+      calculation.chemicalFertilizers.forEach(f => {
+        requirements.push({ productName: f.name, category: 'fertilizer', quantity: f.quantityKg, unit: 'kg' });
+      });
+      calculation.organicFirst.forEach(o => {
+        requirements.push({ productName: o.name, category: 'organic', quantity: parseInt(o.quantity) || 0, unit: 'kg' });
+      });
+
+      if (!requirements.length) return;
+
+      const userStr = localStorage.getItem('user');
+      const user = userStr ? JSON.parse(userStr) : null;
+
+      const { shops } = await shopkeeperApi.findShops({
+        requirements,
+        farmerLocation: {
+          village: user?.location?.village,
+          district: user?.location?.district,
+          state: user?.location?.state,
+          latitude: user?.location?.coordinates?.latitude,
+          longitude: user?.location?.coordinates?.longitude,
+        },
+        maxResults: 5,
+      });
+
+      setShopRecommendations(shops || []);
+    } catch {
+    } finally {
+      setShopsLoading(false);
     }
   };
 
@@ -399,6 +442,17 @@ export default function FertilizerCalculatorPage() {
   const selectedCropHi = crops.find(c => c.key === selectedCrop)?.labelHi || '';
   const hasReports = savedReports.length > 0;
   const selectedReport = savedReports.find(r => r._id === selectedReportId);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600" />
+          <p className="text-sm text-emerald-700 font-medium">लोड हो रहा है…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -859,6 +913,27 @@ export default function FertilizerCalculatorPage() {
                 <div className="text-sm opacity-80">अनुमानित कुल लागत</div>
                 <div className="text-3xl font-extrabold mt-1">₹{result.totalCostMin.toLocaleString()} – ₹{result.totalCostMax.toLocaleString()}</div>
               </div>
+
+              {/* Shop Recommendations */}
+              {(shopsLoading || shopRecommendations.length > 0) && (
+                <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-6">
+                  <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <FaMapMarkerAlt className="text-emerald-600" /> आसपास की उपलब्ध दुकानें
+                  </h3>
+                  {shopsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <FaSpinner className="animate-spin text-emerald-600" />
+                      <span className="ml-2 text-sm text-gray-500">दुकानें खोज रहे हैं...</span>
+                    </div>
+                  ) : (
+                    <ShopRecommendationList
+                      shops={shopRecommendations}
+                      title=""
+                      emptyMessage="आसपास कोई दुकान उपलब्ध नहीं है जिसमें ये उत्पद हों।"
+                    />
+                  )}
+                </div>
+              )}
 
               {/* Actions */}
               <div className="flex gap-3">

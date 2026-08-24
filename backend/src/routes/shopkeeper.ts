@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -6,6 +6,8 @@ import { authenticate, AuthenticatedRequest } from '../middleware/auth';
 import { ShopkeeperProfile } from '../models/ShopkeeperProfile';
 import { FertilizerProduct } from '../models/FertilizerProduct';
 import { NurseryProduct } from '../models/NurseryProduct';
+import { OrganicProduct } from '../models/OrganicProduct';
+import { findShopsForProducts, findShopsForCrop, FarmerLocation, ProductRequirement } from '../services/shopMatcher';
 
 const router = express.Router();
 
@@ -50,7 +52,7 @@ router.get('/profile', authenticate, requireShopkeeper, async (req: Authenticate
 router.post('/select-type', authenticate, requireShopkeeper, async (req: AuthenticatedRequest, res) => {
   try {
     const { shopType } = req.body;
-    if (!['fertilizer', 'nursery'].includes(shopType))
+    if (!['fertilizer', 'nursery', 'organic'].includes(shopType))
       return res.status(400).json({ error: 'Invalid shop type' });
 
     const existing = await ShopkeeperProfile.findOne({ userId: req.user!.userId });
@@ -674,6 +676,140 @@ router.get('/seed-search', async (req, res) => {
     res.json({ crop, results });
   } catch (err) {
     res.status(500).json({ error: 'Failed to search seeds' });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ORGANIC PRODUCT ROUTES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// GET /api/shopkeeper/organic-products
+router.get('/organic-products', authenticate, requireShopkeeper, async (req: AuthenticatedRequest, res) => {
+  try {
+    const profile = await ShopkeeperProfile.findOne({ userId: req.user!.userId });
+    if (!profile) return res.json({ products: [] });
+    const products = await OrganicProduct.find({ shopkeeperId: profile._id }).sort({ createdAt: -1 });
+    res.json({ products });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch organic products' });
+  }
+});
+
+// POST /api/shopkeeper/organic-products
+router.post('/organic-products', authenticate, requireShopkeeper, upload.array('images', 5), async (req: AuthenticatedRequest, res) => {
+  try {
+    const profile = await ShopkeeperProfile.findOne({ userId: req.user!.userId });
+    if (!profile) return res.status(404).json({ error: 'Shop profile not found' });
+
+    const files = req.files as Express.Multer.File[];
+    const images = files?.map(f => fileUrl(f.filename)) || [];
+
+    const product = await OrganicProduct.create({
+      shopkeeperId: profile._id,
+      productName: req.body.productName,
+      brandName: req.body.brandName || '',
+      category: req.body.category || 'Organic',
+      productSubCategory: req.body.productSubCategory || 'organic_manure',
+      cropType: req.body.cropType || '',
+      variety: req.body.variety || '',
+      productImages: images,
+      quantity: Number(req.body.quantity) || 0,
+      unit: req.body.unit || 'kg',
+      mrp: Number(req.body.mrp) || 0,
+      sellingPrice: Number(req.body.sellingPrice) || 0,
+      description: req.body.description || '',
+      usageInstructions: req.body.usageInstructions || '',
+      dosage: req.body.dosage || '',
+      cropSuitability: req.body.cropSuitability ? JSON.parse(req.body.cropSuitability) : [],
+      ingredients: req.body.ingredients || '',
+      manufacturingCompany: req.body.manufacturingCompany || '',
+      manufacturingDate: req.body.manufacturingDate || null,
+      expiryDate: req.body.expiryDate || null,
+      stockStatus: req.body.stockStatus || 'in_stock',
+      aiScanned: req.body.aiScanned === 'true' || false,
+    });
+
+    res.status(201).json({ product });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Failed to create organic product' });
+  }
+});
+
+// PUT /api/shopkeeper/organic-products/:id
+router.put('/organic-products/:id', authenticate, requireShopkeeper, upload.array('images', 5), async (req: AuthenticatedRequest, res) => {
+  try {
+    const profile = await ShopkeeperProfile.findOne({ userId: req.user!.userId });
+    if (!profile) return res.status(404).json({ error: 'Shop profile not found' });
+
+    const product = await OrganicProduct.findOne({ _id: req.params.id, shopkeeperId: profile._id });
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+
+    const files = req.files as Express.Multer.File[];
+    if (files?.length) {
+      product.productImages = [...product.productImages, ...files.map(f => fileUrl(f.filename))];
+    }
+
+    const fields = ['productName', 'brandName', 'category', 'productSubCategory', 'cropType', 'variety', 'quantity', 'unit', 'mrp', 'sellingPrice', 'description', 'usageInstructions', 'dosage', 'ingredients', 'manufacturingCompany', 'stockStatus'];
+    fields.forEach(f => {
+      if (req.body[f] !== undefined) (product as any)[f] = req.body[f];
+    });
+
+    if (req.body.cropSuitability) product.cropSuitability = JSON.parse(req.body.cropSuitability);
+    if (req.body.aiScanned !== undefined) product.aiScanned = req.body.aiScanned === 'true';
+
+    await product.save();
+    res.json({ product });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Failed to update organic product' });
+  }
+});
+
+// DELETE /api/shopkeeper/organic-products/:id
+router.delete('/organic-products/:id', authenticate, requireShopkeeper, async (req: AuthenticatedRequest, res) => {
+  try {
+    const profile = await ShopkeeperProfile.findOne({ userId: req.user!.userId });
+    if (!profile) return res.status(404).json({ error: 'Shop profile not found' });
+
+    const product = await OrganicProduct.findOneAndDelete({ _id: req.params.id, shopkeeperId: profile._id });
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete organic product' });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UNIFIED SHOP MATCHING API (for AI recommendations, fertilizer calculator, disease detection)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// POST /api/shopkeeper/find-shops — find registered shops with products in stock
+router.post('/find-shops', async (req: Request, res: Response) => {
+  try {
+    const { requirements, cropName, farmerLocation, maxResults, maxDistanceKm } = req.body as {
+      requirements?: ProductRequirement[];
+      cropName?: string;
+      farmerLocation: FarmerLocation;
+      maxResults?: number;
+      maxDistanceKm?: number;
+    };
+
+    if (!farmerLocation) {
+      return res.status(400).json({ error: 'Farmer location is required' });
+    }
+
+    let matches;
+    if (cropName && !requirements) {
+      matches = await findShopsForCrop(cropName, farmerLocation, { maxResults });
+    } else if (requirements?.length) {
+      matches = await findShopsForProducts(requirements, farmerLocation, { maxResults, maxDistanceKm });
+    } else {
+      return res.status(400).json({ error: 'Either cropName or requirements array is required' });
+    }
+
+    res.json({ shops: matches });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Failed to find shops' });
   }
 });
 

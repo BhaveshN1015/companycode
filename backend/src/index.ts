@@ -50,6 +50,7 @@ import { languageContextMiddleware } from './middleware/languageContext';
 import healthRoutes from './routes/health';
 import { logger } from './utils/logger';
 import { bridgeManager } from './services/voiceGuideBridgeManager';
+import { User } from './models/User';
 
 dotenv.config({ override: true });
 
@@ -180,6 +181,7 @@ app.use(bilingualErrorHandler);
 
 const startServer = async () => {
   await connectDB();
+  await User.syncIndexes();
   await ensureBootstrapAdmin();
   await ensureSeededSchemes();
   await bridgeManager.ensureBridgeRunning();

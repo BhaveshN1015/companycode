@@ -44,6 +44,19 @@ export const shopkeeperApi = {
   deleteNurseryProduct: (id: string) =>
     fetch(`${API}/shopkeeper/nursery-products/${id}`, { method: 'DELETE', headers: authHeaders() }).then(r => r.json()),
 
+  // Organic products
+  getOrganicProducts: () =>
+    fetch(`${API}/shopkeeper/organic-products`, { headers: authHeaders() }).then(r => r.json()),
+
+  createOrganicProduct: (fd: FormData) =>
+    fetch(`${API}/shopkeeper/organic-products`, { method: 'POST', headers: authHeaders(), body: fd }).then(r => r.json()),
+
+  updateOrganicProduct: (id: string, fd: FormData) =>
+    fetch(`${API}/shopkeeper/organic-products/${id}`, { method: 'PUT', headers: authHeaders(), body: fd }).then(r => r.json()),
+
+  deleteOrganicProduct: (id: string) =>
+    fetch(`${API}/shopkeeper/organic-products/${id}`, { method: 'DELETE', headers: authHeaders() }).then(r => r.json()),
+
   // Marketplace — enhanced with location & search
   getMarketplace: (params: Record<string, string>) => {
     const qs = new URLSearchParams(params).toString();
@@ -68,4 +81,17 @@ export const shopkeeperApi = {
     const qs = new URLSearchParams({ crop, ...params }).toString();
     return fetch(`${API}/shopkeeper/crop-products?${qs}`).then(r => r.json());
   },
+
+  findShops: (data: {
+    requirements?: Array<{ productName: string; category: string; quantity?: number; unit?: string }>;
+    cropName?: string;
+    farmerLocation: { latitude?: number; longitude?: number; village?: string; tehsil?: string; district?: string; state?: string };
+    maxResults?: number;
+    maxDistanceKm?: number;
+  }) =>
+    fetch(`${API}/shopkeeper/find-shops`, {
+      method: 'POST',
+      headers: jsonHeaders(),
+      body: JSON.stringify(data),
+    }).then(r => r.json()),
 };

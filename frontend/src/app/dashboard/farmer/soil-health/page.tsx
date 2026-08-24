@@ -425,7 +425,7 @@ function MyReports({ items, loading, onSelect, onDelete }: {
 }
 
 export default function SoilHealthPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   const [view, setView] = useState<PageView>('upload');
@@ -456,15 +456,17 @@ export default function SoilHealthPage() {
 
   // Auto-fetch history on mount — reports always visible after login
   useEffect(() => {
+    if (isLoading) return;
     if (!isAuthenticated) return;
     setHistoryLoading(true);
     getSoilHistory()
       .then((res) => setHistory(res.data))
       .catch(() => {})
       .finally(() => setHistoryLoading(false));
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   const processFile = useCallback(async (file: File) => {
+    if (isLoading) return;
     if (!isAuthenticated) { router.replace('/auth/login'); return; }
     setError('');
     setUploading(true);

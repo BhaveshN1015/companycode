@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IShopkeeperProfile extends Document {
   userId: mongoose.Types.ObjectId;
-  shopType: 'fertilizer' | 'nursery';
+  shopType: 'fertilizer' | 'nursery' | 'organic';
   shopName: string;
   ownerName: string;
   mobileNumber: string;
@@ -44,7 +44,7 @@ export interface IShopkeeperProfile extends Document {
 const shopkeeperProfileSchema = new Schema<IShopkeeperProfile>(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
-    shopType: { type: String, enum: ['fertilizer', 'nursery'], required: true },
+    shopType: { type: String, enum: ['fertilizer', 'nursery', 'organic'], required: true },
     shopName: { type: String, default: '' },
     ownerName: { type: String, default: '' },
     mobileNumber: { type: String, default: '' },

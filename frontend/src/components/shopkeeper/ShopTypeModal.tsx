@@ -1,15 +1,15 @@
 'use client';
 import { useState } from 'react';
-import { Sprout, Leaf } from 'lucide-react';
+import { Sprout, Leaf, TreeDeciduous } from 'lucide-react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 interface Props {
-  onComplete: (shopType: 'fertilizer' | 'nursery') => void;
+  onComplete: (shopType: 'fertilizer' | 'nursery' | 'organic') => void;
 }
 
 export default function ShopTypeModal({ onComplete }: Props) {
-  const [selected, setSelected] = useState<'fertilizer' | 'nursery' | null>(null);
+  const [selected, setSelected] = useState<'fertilizer' | 'nursery' | 'organic' | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -41,6 +41,13 @@ export default function ShopTypeModal({ onComplete }: Props) {
       desc: 'Sell fertilizers, pesticides, seeds, and agricultural inputs',
       icon: Sprout,
       color: 'emerald',
+    },
+    {
+      type: 'organic' as const,
+      label: 'Organic Shop',
+      desc: 'ऑर्गेनिक खाद, जैविक दवाइयाँ और प्राकृतिक कृषि उत्पाद बेचें',
+      icon: TreeDeciduous,
+      color: 'lime',
     },
     {
       type: 'nursery' as const,

@@ -94,7 +94,7 @@ function HistoryEntryCard({ entry }: { entry: HistoryEntry }) {
 }
 
 export default function RecommendationHistoryPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -104,9 +104,10 @@ export default function RecommendationHistoryPage() {
   const limit = 10;
 
   useEffect(() => {
+    if (isLoading) return;
     if (!isAuthenticated) { router.push('/auth'); return; }
     fetchHistory();
-  }, [isAuthenticated, page]);
+  }, [isAuthenticated, isLoading, page]);
 
   const fetchHistory = async () => {
     setLoading(true);

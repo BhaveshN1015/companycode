@@ -69,9 +69,19 @@ const buildAllowedOrigins = () => {
     .map((origin) => origin.trim())
     .filter(Boolean);
 
+  const criticalOrigins = [
+    'https://agroudankisanpragati.com',
+    'https://admin.agroudankisanpragati.com',
+    'https://www.agroudankisanpragati.com',
+    'capacitor://localhost',
+    'http://localhost',
+  ];
+
+  const devOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+
   const defaultOrigins = process.env.NODE_ENV === 'production'
-    ? []
-    : ['http://localhost:3000', 'http://localhost:3001'];
+    ? criticalOrigins
+    : [...criticalOrigins, ...devOrigins];
 
   return Array.from(new Set([...defaultOrigins, ...configuredOrigins]));
 };

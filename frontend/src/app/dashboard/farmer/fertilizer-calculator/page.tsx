@@ -718,9 +718,10 @@ export default function FertilizerCalculatorPage() {
           ) : (
             /* RESULT */
             <div className="space-y-6">
-              <div className="text-center">
+               <div className="text-center">
                 <h2 className="text-2xl font-bold text-slate-800 mb-1">आपके खेत के लिए खाद की सिफारिश</h2>
                 <p className="text-sm text-slate-500">{selectedCropHi || result.crop} • {result.areaDisplay}</p>
+                <p className="text-xs text-slate-400 mt-1">{result.areaHectares} हेक्टेयर में बदले गए</p>
               </div>
 
               {/* Data source message */}
@@ -742,19 +743,28 @@ export default function FertilizerCalculatorPage() {
                   {result.deficitN > 0 && (
                     <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-emerald-100">
                       <span className="text-sm font-medium text-slate-700">नाइट्रोजन (N)</span>
-                      <span className="text-lg font-bold text-emerald-700">{result.deficitN} किलो</span>
+                      <div className="text-right">
+                        <span className="text-xs text-slate-500 block">आवश्यक: {result.requiredN} kg</span>
+                        <span className="text-lg font-bold text-emerald-700">{result.deficitN} किलो कमी</span>
+                      </div>
                     </div>
                   )}
                   {result.deficitP > 0 && (
                     <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-emerald-100">
                       <span className="text-sm font-medium text-slate-700">फॉस्फोरस (P)</span>
-                      <span className="text-lg font-bold text-emerald-700">{result.deficitP} किलो</span>
+                      <div className="text-right">
+                        <span className="text-xs text-slate-500 block">आवश्यक: {result.requiredP} kg</span>
+                        <span className="text-lg font-bold text-emerald-700">{result.deficitP} किलो कमी</span>
+                      </div>
                     </div>
                   )}
                   {result.deficitK > 0 && (
                     <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-emerald-100">
                       <span className="text-sm font-medium text-slate-700">पोटाश (K)</span>
-                      <span className="text-lg font-bold text-emerald-700">{result.deficitK} किलो</span>
+                      <div className="text-right">
+                        <span className="text-xs text-slate-500 block">आवश्यक: {result.requiredK} kg</span>
+                        <span className="text-lg font-bold text-emerald-700">{result.deficitK} किलो कमी</span>
+                      </div>
                     </div>
                   )}
                   {result.deficitN === 0 && result.deficitP === 0 && result.deficitK === 0 && (
@@ -772,9 +782,12 @@ export default function FertilizerCalculatorPage() {
                   <div className="space-y-4">
                     {result.chemicalFertilizers.map((c, i) => (
                       <div key={i} className="p-4 rounded-xl bg-blue-50 border border-blue-100">
-                        <div className="flex items-center justify-between mb-2">
+                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold text-slate-800">{c.nameHi || c.name}</span>
-                          <span className="text-lg font-bold text-blue-700">{c.quantityKg} किलो</span>
+                          <div className="text-right">
+                            <span className="text-lg font-bold text-blue-700">{c.quantityKg} किलो</span>
+                            <span className="text-xs text-slate-500 block">{c.quantityPerUnit}</span>
+                          </div>
                         </div>
                         <div className="text-xs text-slate-600 mb-2">{c.nutrientProvided}</div>
                         <div className="text-xs text-slate-500 space-y-1">
@@ -895,16 +908,27 @@ export default function FertilizerCalculatorPage() {
               )}
 
               {/* Tips */}
-              {result.tipsHi?.length > 0 && (
+              {(result.tips?.length > 0 || result.tipsHi?.length > 0) && (
                 <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-6">
                   <h3 className="text-base font-bold text-slate-800 mb-3">कैसे डालें</h3>
-                  <ul className="space-y-2">
-                    {result.tipsHi.map((tip, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                        <FaCheck className="text-emerald-500 mt-0.5 flex-shrink-0 text-xs" /> {tip}
-                      </li>
-                    ))}
-                  </ul>
+                  {result.tipsHi?.length > 0 && (
+                    <ul className="space-y-2 mb-3">
+                      {result.tipsHi.map((tip, i) => (
+                        <li key={`hi-${i}`} className="flex items-start gap-2 text-sm text-slate-600">
+                          <FaCheck className="text-emerald-500 mt-0.5 flex-shrink-0 text-xs" /> {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {result.tips?.length > 0 && (
+                    <ul className="space-y-2">
+                      {result.tips.map((tip, i) => (
+                        <li key={`en-${i}`} className="flex items-start gap-2 text-sm text-slate-500">
+                          <FaCheck className="text-emerald-400 mt-0.5 flex-shrink-0 text-xs" /> {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 
